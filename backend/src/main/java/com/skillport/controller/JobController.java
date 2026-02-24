@@ -19,6 +19,17 @@ public class JobController {
         return jobRepository.findAll();
     }
 
+    @GetMapping("/{id}")
+    public Job getJobById(@PathVariable Long id, @RequestParam(required = false) boolean incrementView) {
+        return jobRepository.findById(id).map(job -> {
+            if (incrementView) {
+                job.setViews((job.getViews() == null ? 0 : job.getViews()) + 1);
+                jobRepository.save(job);
+            }
+            return job;
+        }).orElse(null);
+    }
+
     @GetMapping("/recruiter/{recruiterId}")
     public List<Job> getJobsByRecruiter(@PathVariable Long recruiterId) {
         return jobRepository.findByRecruiterId(recruiterId);

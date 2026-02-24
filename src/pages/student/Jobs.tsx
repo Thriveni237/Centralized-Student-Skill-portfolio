@@ -37,7 +37,6 @@ const Jobs = () => {
   const [loading, setLoading] = useState(true);
   const [applyingId, setApplyingId] = useState<string | null>(null);
   
-  // Details Dialog State
   const [selectedJob, setSelectedJob] = useState<any>(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
@@ -70,8 +69,10 @@ const Jobs = () => {
             location: 'Remote',
             type: 'Internship',
             salary: '$25 - $35 / hr',
-            description: 'We are looking for a passionate Frontend Intern to join our team. You will work with React, Tailwind CSS, and modern web technologies to build beautiful user interfaces.',
-            tags: 'React, Tailwind, TypeScript'
+            description: 'We are looking for a passionate Frontend Intern to join our team.',
+            tags: 'React, Tailwind, TypeScript',
+            views: 45,
+            applicants: 12
           }
         ]);
       }
@@ -104,6 +105,8 @@ const Jobs = () => {
       
       setAppliedJobIds(prev => new Set(prev).add(String(job.id)));
       showSuccess(`Successfully applied for ${job.title}!`);
+      // Refresh jobs to see updated applicant count
+      fetchJobsAndApplications();
     } catch (error: any) {
       showError(error.message || "Failed to submit application");
     } finally {
@@ -111,9 +114,18 @@ const Jobs = () => {
     }
   };
 
-  const openDetails = (job: any) => {
+  const openDetails = async (job: any) => {
     setSelectedJob(job);
     setIsDetailsOpen(true);
+    
+    // Increment view count in background
+    if (!isDemo) {
+      try {
+        await api.get(`/jobs/${job.id}?incrementView=true`);
+      } catch (e) {
+        console.error("Failed to increment job view");
+      }
+    }
   };
 
   const filteredJobs = jobs.filter(job => 
@@ -172,7 +184,7 @@ const Jobs = () => {
                       <div className="flex flex-col sm:flex-row lg:flex-col items-start sm:items-center lg:items-end gap-4">
                         <div className="flex items-center gap-4 text-sm font-medium text-foreground/80">
                           <span className="flex items-center gap-1 text-emerald-500"><DollarSign className="w-4 h-4" /> {job.salary || 'Competitive'}</span>
-                          <span className="flex items-center gap-1 text-muted-foreground"><Clock className="w-4 h-4" /> Active</span>
+                          <span className="flex items-center gap-1 text-muted-foreground"><Clock className="w-4 h-4" /> {job.applicants || 0} Applicants</span>
                         </div>
                         <div className="flex gap-2">
                           <Button variant="outline" size="sm" onClick={() => openDetails(job)} className="gap-2">
@@ -217,7 +229,6 @@ const Jobs = () => {
           </div>
         )}
 
-        {/* Job Details Dialog */}
         <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
           <DialogContent className="max-w-2xl">
             {selectedJob && (
@@ -248,7 +259,7 @@ const Jobs = () => {
                       <DollarSign className="w-4 h-4" /> {selectedJob.salary || 'Competitive'}
                     </div>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                      <Clock className="w-4 h-4" /> Posted recently
+                      <Clock className="w-4 h-4" /> {selectedJob.views || 0} Views
                     </div>
                   </div>
 
@@ -257,17 +268,6 @@ const Jobs = () => {
                     <p className="text-muted-foreground leading-relaxed">
                       {selectedJob.description || "No detailed description provided for this role."}
                     </p>
-                  </div>
-
-                  <div className="space-y-2">
-                    <h4 className="font-bold text-foreground">Required Skills</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {selectedJob.tags?.split(',').map((tag: string) => (
-                        <Badge key={tag} variant="secondary" className="bg-muted text-muted-foreground border-none">
-                          {tag.trim()}
-                        </Badge>
-                      ))}
-                    </div>
                   </div>
                 </div>
 
