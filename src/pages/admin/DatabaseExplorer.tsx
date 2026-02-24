@@ -6,10 +6,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { Database, RefreshCw, Search, Terminal } from 'lucide-react';
+import { Database, RefreshCw, Search, Terminal, Download } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { api } from '@/lib/api';
-import { showError } from '@/utils/toast';
+import { showError, showSuccess } from '@/utils/toast';
 import { cn } from '@/lib/utils';
 
 const DatabaseExplorer = () => {
@@ -49,6 +49,31 @@ const DatabaseExplorer = () => {
 
   const columns = data.length > 0 ? Object.keys(data[0]) : [];
 
+  const downloadCSV = () => {
+    if (filteredData.length === 0) return;
+    
+    const headers = columns.join(',');
+    const rows = filteredData.map(row => 
+      columns.map(col => {
+        const val = row[col];
+        return typeof val === 'string' ? `"${val.replace(/"/g, '""')}"` : val;
+      }).join(',')
+    );
+    
+    const csvContent = [headers, ...rows].join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    
+    link.setAttribute('href', url);
+    link.setAttribute('download', `${activeTable}_export_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    showSuccess(`Downloaded ${activeTable} data as CSV`);
+  };
+
   return (
     <DashboardLayout role="admin">
       <div className="space-y-8">
@@ -58,25 +83,35 @@ const DatabaseExplorer = () => {
               <Database className="w-8 h-8 text-primary" />
               Database Explorer
             </h1>
-            <p className="text-muted-foreground">Inspect raw data across all system tables.</p>
+            <p className="text-muted-foreground">Inspect and export raw data across all system tables.</p>
           </div>
-          <Button 
-            variant="outline" 
-            onClick={() => fetchData(activeTable)} 
-            disabled={loading}
-            className="gap-2"
-          >
-            <RefreshCw className={cn("w-4 h-4", loading && "animate-spin")} />
-            Refresh Data
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button 
+              variant="outline" 
+              onClick={downloadCSV}
+              disabled={loading || filteredData.length === 0}
+              className="gap-2 border-primary/20 text-primary hover:bg-primary/5"
+            >
+              <Download className="w-4 h-4" />
+              Download CSV
+            </Button>
+            <Button 
+              variant="outline" 
+              onClick={() => fetchData(activeTable)} 
+              disabled={loading}
+              className="gap-2"
+            >
+              <RefreshCw className={cn("w-4 h-4", loading && "animate-spin")} />
+              Refresh Data
+            </Button>
+          </div>
         </div>
 
         <Card className="border-none shadow-sm overflow-hidden bg-card">
           <CardHeader className="bg-slate-950 text-white p-4">
             <div className="flex items-center gap-2 text-sm font-mono">
-              <Terminal className="w-4 h-4 text-emerald-400" />
               <span className="text-emerald-400">mysql></span>
-              <span>SELECT * FROM {activeTable};</span>
+              <span>SELECT * FROM {activeTable} WHERE data LIKE '%{searchQuery}%';</span>
             </div>
           </CardHeader>
           <CardContent className="p-0">
