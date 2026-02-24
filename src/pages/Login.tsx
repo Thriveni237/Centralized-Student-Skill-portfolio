@@ -59,17 +59,17 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center bg-background px-4 py-12">
       <div className="w-full max-w-md space-y-8">
-        <Card className="border-none shadow-xl">
+        <Card className="border border-border shadow-xl bg-card text-card-foreground">
           <CardHeader className="space-y-1 text-center">
             <div className="flex justify-center mb-4">
-              <div className="bg-blue-600 p-2 rounded-xl">
-                <GraduationCap className="text-white w-8 h-8" />
+              <div className="bg-primary p-2 rounded-xl">
+                <GraduationCap className="text-primary-foreground w-8 h-8" />
               </div>
             </div>
             <CardTitle className="text-2xl font-bold">Welcome back</CardTitle>
-            <CardDescription>Enter your credentials to access your account</CardDescription>
+            <CardDescription className="text-muted-foreground">Enter your credentials to access your account</CardDescription>
           </CardHeader>
 
           <form onSubmit={handleSubmit}>
@@ -83,6 +83,7 @@ const Login = () => {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  className="bg-background"
                 />
               </div>
 
@@ -94,6 +95,7 @@ const Login = () => {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  className="bg-background"
                 />
               </div>
             </CardContent>
@@ -101,16 +103,16 @@ const Login = () => {
             <CardFooter className="flex flex-col space-y-4">
               <Button
                 type="submit"
-                className="w-full bg-blue-600 hover:bg-blue-700"
+                className="w-full bg-primary hover:bg-primary/90 text-primary-foreground"
                 disabled={isLoading}
               >
                 {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 Sign In
               </Button>
 
-              <p className="text-sm text-center text-slate-600">
+              <p className="text-sm text-center text-muted-foreground">
                 Don't have an account?{" "}
-                <Link to="/signup" className="text-blue-600 hover:underline font-medium">
+                <Link to="/signup" className="text-primary hover:underline font-medium">
                   Sign up
                 </Link>
               </p>
@@ -120,22 +122,22 @@ const Login = () => {
 
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t" />
+            <span className="w-full border-t border-border" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-slate-50 px-2 text-blue-600 font-bold">Presentation Mode</span>
+            <span className="bg-background px-2 text-primary font-bold">Presentation Mode</span>
           </div>
         </div>
 
         <div className="grid grid-cols-3 gap-3">
-          <Button variant="outline" size="sm" onClick={() => handleDemoLogin('student')} className="text-[10px] h-auto py-3 flex-col gap-2 border-blue-200 hover:bg-blue-50">
-            <Play className="w-4 h-4 text-blue-600" /> Student
+          <Button variant="outline" size="sm" onClick={() => handleDemoLogin('student')} className="text-[10px] h-auto py-3 flex-col gap-2 border-border hover:bg-accent">
+            <Play className="w-4 h-4 text-primary" /> Student
           </Button>
-          <Button variant="outline" size="sm" onClick={() => handleDemoLogin('recruiter')} className="text-[10px] h-auto py-3 flex-col gap-2 border-indigo-200 hover:bg-indigo-50">
-            <Play className="w-4 h-4 text-indigo-600" /> Recruiter
+          <Button variant="outline" size="sm" onClick={() => handleDemoLogin('recruiter')} className="text-[10px] h-auto py-3 flex-col gap-2 border-border hover:bg-accent">
+            <Play className="w-4 h-4 text-primary" /> Recruiter
           </Button>
-          <Button variant="outline" size="sm" onClick={() => handleDemoLogin('admin')} className="text-[10px] h-auto py-3 flex-col gap-2 border-emerald-200 hover:bg-emerald-50">
-            <Play className="w-4 h-4 text-emerald-600" /> Admin
+          <Button variant="outline" size="sm" onClick={() => handleDemoLogin('admin')} className="text-[10px] h-auto py-3 flex-col gap-2 border-border hover:bg-accent">
+            <Play className="w-4 h-4 text-primary" /> Admin
           </Button>
         </div>
       </div>
