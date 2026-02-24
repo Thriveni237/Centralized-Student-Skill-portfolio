@@ -101,21 +101,21 @@ const SavedProfiles = () => {
       <div className="space-y-8">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900">Talent Bookmarks</h1>
-            <p className="text-slate-500">Candidates you've saved for future opportunities.</p>
+            <h1 className="text-3xl font-bold text-foreground">Talent Bookmarks</h1>
+            <p className="text-muted-foreground">Candidates you've saved for future opportunities.</p>
           </div>
           <div className="flex items-center gap-2">
             <div className="relative w-full md:w-64">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <input 
                 type="text"
                 placeholder="Search bookmarks..." 
-                className="w-full pl-10 pr-4 py-2 rounded-xl border-none bg-white shadow-sm focus:ring-2 focus:ring-blue-500 transition-all"
+                className="w-full pl-10 pr-4 py-2 rounded-xl border-none bg-card shadow-sm focus:ring-2 focus:ring-primary transition-all text-foreground"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
-            <Button variant="outline" size="icon" className="bg-white border-none shadow-sm">
+            <Button variant="outline" size="icon" className="bg-card border-none shadow-sm">
               <Filter className="w-4 h-4" />
             </Button>
           </div>
@@ -123,7 +123,7 @@ const SavedProfiles = () => {
 
         {loading ? (
           <div className="flex justify-center py-20">
-            <Loader2 className="w-10 h-10 animate-spin text-blue-600" />
+            <Loader2 className="w-10 h-10 animate-spin text-primary" />
           </div>
         ) : filteredList.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -132,17 +132,17 @@ const SavedProfiles = () => {
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between mb-6">
                     <div className="flex items-center gap-4">
-                      <Avatar className="w-16 h-16 border-2 border-white shadow-md">
+                      <Avatar className="w-16 h-16 border-2 border-background shadow-md">
                         <AvatarImage src={student.avatarUrl} />
-                        <AvatarFallback className="bg-blue-50 text-blue-600 font-bold text-xl">
+                        <AvatarFallback className="bg-primary/10 text-primary font-bold text-xl">
                           {student.firstName?.[0]}{student.lastName?.[0]}
                         </AvatarFallback>
                       </Avatar>
                       <div>
-                        <h3 className="text-xl font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
+                        <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
                           {student.firstName} {student.lastName}
                         </h3>
-                        <p className="text-sm text-slate-500 flex items-center gap-1">
+                        <p className="text-sm text-muted-foreground flex items-center gap-1">
                           <MapPin className="w-3 h-3" /> {student.location || 'Remote'}
                         </p>
                       </div>
@@ -150,32 +150,32 @@ const SavedProfiles = () => {
                     <Button 
                       variant="ghost" 
                       size="icon" 
-                      className="text-slate-300 hover:text-red-600 hover:bg-red-50 transition-colors"
+                      className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
                       onClick={() => handleRemove(student.id, student.firstName)}
                     >
                       <Trash2 className="w-5 h-5" />
                     </Button>
                   </div>
 
-                  <p className="text-sm text-slate-600 line-clamp-2 mb-6 min-h-[40px]">
+                  <p className="text-sm text-muted-foreground line-clamp-2 mb-6 min-h-[40px]">
                     {student.bio || "No bio provided yet. This student is building their professional presence."}
                   </p>
 
                   <div className="flex flex-wrap gap-2 mb-6">
                     {(student.skills || ['React', 'TypeScript', 'Node.js']).slice(0, 3).map((skill: string) => (
-                      <Badge key={skill} variant="secondary" className="bg-blue-50 text-blue-700 border-none font-normal">
+                      <Badge key={skill} variant="secondary" className="bg-primary/10 text-primary border-none font-normal">
                         {skill}
                       </Badge>
                     ))}
                   </div>
 
                   <div className="flex gap-3 pt-4 border-t">
-                    <Button variant="outline" className="flex-1 gap-2 border-slate-100 hover:bg-slate-50" asChild>
+                    <Button variant="outline" className="flex-1 gap-2 border-border hover:bg-accent" asChild>
                       <Link to={`/dashboard/student/profile`}>
                         <User className="w-4 h-4" /> View Profile
                       </Link>
                     </Button>
-                    <Button className="flex-1 gap-2 bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-100">
+                    <Button className="flex-1 gap-2 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/10">
                       <Mail className="w-4 h-4" /> Contact
                     </Button>
                   </div>
@@ -184,14 +184,14 @@ const SavedProfiles = () => {
             ))}
           </div>
         ) : (
-          <div className="text-center py-20 bg-white rounded-3xl border-2 border-dashed border-slate-200">
-            <Bookmark className="w-12 h-12 text-slate-200 mx-auto mb-4" />
-            <h3 className="text-xl font-bold text-slate-900">No saved profiles</h3>
-            <p className="text-slate-500 mt-2 max-w-xs mx-auto">
+          <div className="text-center py-20 bg-card rounded-3xl border-2 border-dashed border-border">
+            <Bookmark className="w-12 h-12 text-muted-foreground/30 mx-auto mb-4" />
+            <h3 className="text-xl font-bold text-foreground">No saved profiles</h3>
+            <p className="text-muted-foreground mt-2 max-w-xs mx-auto">
               Start exploring talent and bookmark candidates you're interested in.
             </p>
             <Link to="/dashboard/recruiter">
-              <Button variant="link" className="mt-4 text-blue-600 font-bold">
+              <Button variant="link" className="mt-4 text-primary font-bold">
                 Search for talent
               </Button>
             </Link>

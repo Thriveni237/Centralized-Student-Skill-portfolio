@@ -81,20 +81,20 @@ const Interviews = () => {
       <div className="space-y-8">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900">Interview Command Center</h1>
-            <p className="text-slate-500">Manage your candidate pipeline and scheduled evaluations.</p>
+            <h1 className="text-3xl font-bold text-foreground">Interview Command Center</h1>
+            <p className="text-muted-foreground">Manage your candidate pipeline and scheduled evaluations.</p>
           </div>
-          <Button className="bg-blue-600 hover:bg-blue-700 shadow-lg shadow-blue-100">
+          <Button className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/10">
             <Plus className="w-4 h-4 mr-2" /> Schedule Interview
           </Button>
         </div>
 
         <Tabs defaultValue="upcoming" className="w-full">
-          <TabsList className="bg-slate-100 p-1 rounded-xl mb-6">
-            <TabsTrigger value="upcoming" className="rounded-lg gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm">
+          <TabsList className="bg-muted p-1 rounded-xl mb-6">
+            <TabsTrigger value="upcoming" className="rounded-lg gap-2 data-[state=active]:bg-card data-[state=active]:shadow-sm">
               <CalendarDays className="w-4 h-4" /> Upcoming
             </TabsTrigger>
-            <TabsTrigger value="past" className="rounded-lg gap-2 data-[state=active]:bg-white data-[state=active]:shadow-sm">
+            <TabsTrigger value="past" className="rounded-lg gap-2 data-[state=active]:bg-card data-[state=active]:shadow-sm">
               <History className="w-4 h-4" /> Past Interviews
             </TabsTrigger>
           </TabsList>
@@ -102,30 +102,30 @@ const Interviews = () => {
           <TabsContent value="upcoming" className="space-y-4 animate-in fade-in duration-500">
             {loading ? (
               <div className="flex justify-center py-20">
-                <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+                <Loader2 className="w-8 h-8 animate-spin text-primary" />
               </div>
             ) : interviews.length > 0 ? (
               interviews.map((interview) => (
                 <Card key={interview.id} className="border-none shadow-sm hover:shadow-md transition-all group overflow-hidden">
                   <CardContent className="p-0">
                     <div className="flex flex-col md:flex-row items-stretch">
-                      <div className="w-1.5 bg-blue-600" />
+                      <div className="w-1.5 bg-primary" />
                       <div className="flex-1 p-6 flex flex-col md:flex-row md:items-center justify-between gap-6">
                         <div className="flex items-center gap-4">
-                          <Avatar className="w-14 h-14 border-2 border-white shadow-sm">
+                          <Avatar className="w-14 h-14 border-2 border-background shadow-sm">
                             <AvatarImage src={interview.avatar} />
-                            <AvatarFallback className="bg-blue-50 text-blue-600 font-bold">
+                            <AvatarFallback className="bg-primary/10 text-primary font-bold">
                               {interview.candidateName[0]}
                             </AvatarFallback>
                           </Avatar>
                           <div>
-                            <h3 className="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
+                            <h3 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors">
                               {interview.candidateName}
                             </h3>
-                            <p className="text-sm font-medium text-blue-600">{interview.role}</p>
-                            <div className="flex items-center gap-3 mt-1 text-xs text-slate-400">
+                            <p className="text-sm font-medium text-primary">{interview.role}</p>
+                            <div className="flex items-center gap-3 mt-1 text-xs text-muted-foreground">
                               <span className="flex items-center gap-1"><MapPin className="w-3 h-3" /> Remote</span>
-                              <Badge variant="secondary" className="bg-slate-100 text-slate-500 border-none font-normal h-5">
+                              <Badge variant="secondary" className="bg-muted text-muted-foreground border-none font-normal h-5">
                                 {interview.type}
                               </Badge>
                             </div>
@@ -134,23 +134,23 @@ const Interviews = () => {
 
                         <div className="flex flex-wrap items-center gap-8">
                           <div className="space-y-1">
-                            <div className="flex items-center gap-2 text-sm font-bold text-slate-700">
-                              <Calendar className="w-4 h-4 text-blue-500" /> 
+                            <div className="flex items-center gap-2 text-sm font-bold text-foreground">
+                              <Calendar className="w-4 h-4 text-primary" /> 
                               {new Date(interview.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                             </div>
-                            <div className="flex items-center gap-2 text-xs text-slate-500">
+                            <div className="flex items-center gap-2 text-xs text-muted-foreground">
                               <Clock className="w-4 h-4" /> {interview.time}
                             </div>
                           </div>
 
                           <div className="flex items-center gap-2">
-                            <Button variant="outline" size="sm" className="gap-2 border-blue-100 text-blue-700 hover:bg-blue-50">
+                            <Button variant="outline" size="sm" className="gap-2 border-primary/20 text-primary hover:bg-primary/10">
                               <Video className="w-4 h-4" /> Join Call
                             </Button>
-                            <Button variant="ghost" size="sm" className="text-emerald-600 hover:bg-emerald-50" onClick={() => handleComplete(interview.candidateName)}>
+                            <Button variant="ghost" size="sm" className="text-emerald-500 hover:bg-emerald-500/10" onClick={() => handleComplete(interview.candidateName)}>
                               <CheckCircle2 className="w-4 h-4 mr-2" /> Mark Done
                             </Button>
-                            <Button variant="ghost" size="icon" className="text-slate-300">
+                            <Button variant="ghost" size="icon" className="text-muted-foreground">
                               <MoreVertical className="w-4 h-4" />
                             </Button>
                           </div>
@@ -161,17 +161,17 @@ const Interviews = () => {
                 </Card>
               ))
             ) : (
-              <div className="text-center py-20 bg-white rounded-3xl border-2 border-dashed border-slate-200">
-                <Calendar className="w-12 h-12 text-slate-200 mx-auto mb-4" />
-                <p className="text-slate-500">No upcoming interviews scheduled.</p>
+              <div className="text-center py-20 bg-card rounded-3xl border-2 border-dashed border-border">
+                <Calendar className="w-12 h-12 text-muted-foreground/30 mx-auto mb-4" />
+                <p className="text-muted-foreground">No upcoming interviews scheduled.</p>
               </div>
             )}
           </TabsContent>
 
           <TabsContent value="past" className="animate-in fade-in duration-500">
-            <div className="text-center py-20 bg-white rounded-3xl border-2 border-dashed border-slate-200">
-              <History className="w-12 h-12 text-slate-200 mx-auto mb-4" />
-              <p className="text-slate-500">Your interview history will appear here.</p>
+            <div className="text-center py-20 bg-card rounded-3xl border-2 border-dashed border-border">
+              <History className="w-12 h-12 text-muted-foreground/30 mx-auto mb-4" />
+              <p className="text-muted-foreground">Your interview history will appear here.</p>
             </div>
           </TabsContent>
         </Tabs>
