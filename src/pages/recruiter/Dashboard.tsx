@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Search, Filter, MapPin, Bookmark, BookmarkCheck, Loader2, Mail } from 'lucide-react';
 import { api } from '@/lib/api';
-import { showError } from '@/utils/toast';
+import { showError, showSuccess } from '@/utils/toast';
 import { useAuth } from '@/context/AuthContext';
 
 const RecruiterDashboard = () => {
@@ -39,6 +39,10 @@ const RecruiterDashboard = () => {
   ];
 
   useEffect(() => {
+    // Load saved IDs from localStorage on mount
+    const stored = JSON.parse(localStorage.getItem('saved_candidate_ids') || '[]');
+    setSavedIds(stored);
+
     if (isDemo) {
       setStudents(mockStudents);
       setLoading(false);
@@ -66,8 +70,20 @@ const RecruiterDashboard = () => {
     );
   }, [searchQuery, students]);
 
-  const toggleSave = (id: string) => {
-    setSavedIds(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
+  const toggleSave = (id: string, name: string) => {
+    const isSaved = savedIds.includes(id);
+    let newSavedIds: string[];
+    
+    if (isSaved) {
+      newSavedIds = savedIds.filter(i => i !== id);
+      showSuccess(`Removed ${name} from bookmarks`);
+    } else {
+      newSavedIds = [...savedIds, id];
+      showSuccess(`Saved ${name} to bookmarks`);
+    }
+    
+    setSavedIds(newSavedIds);
+    localStorage.setItem('saved_candidate_ids', JSON.stringify(newSavedIds));
   };
 
   return (
@@ -123,7 +139,7 @@ const RecruiterDashboard = () => {
                             <Button 
                               variant="ghost" 
                               size="icon" 
-                              onClick={() => toggleSave(student.id)}
+                              onClick={() => toggleSave(student.id, student.firstName)}
                               className={savedIds.includes(student.id) ? "text-blue-600" : "text-slate-400"}
                             >
                               {savedIds.includes(student.id) ? <BookmarkCheck className="w-5 h-5" /> : <Bookmark className="w-5 h-5" />}
