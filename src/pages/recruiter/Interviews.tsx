@@ -15,14 +15,13 @@ import {
   CheckCircle2, 
   CalendarDays,
   MapPin,
-  ExternalLink,
   Loader2,
-  History
+  History,
+  Plus
 } from 'lucide-react';
 import { showSuccess, showError } from '@/utils/toast';
 import { api } from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
-import { cn } from '@/lib/utils';
 
 const Interviews = () => {
   const { user, isDemo } = useAuth();
@@ -36,12 +35,6 @@ const Interviews = () => {
   const fetchInterviews = async () => {
     try {
       // In a real scenario, we'd fetch applications for this recruiter's jobs with status 'Interviewing'
-      // For now, we'll fetch all applications and filter for 'Interviewing' status
-      const data = await api.get('/jobs'); // Get jobs to find recruiter's jobs
-      const myJobs = Array.isArray(data) ? data.filter((j: any) => j.recruiterId === user.id || isDemo) : [];
-      
-      // This is a simplified mock of fetching related interviews since the backend 
-      // doesn't have a dedicated interview table yet.
       if (isDemo) {
         setInterviews([
           {
@@ -66,6 +59,9 @@ const Interviews = () => {
           }
         ]);
       } else {
+        // Fetch logic for real users
+        const data = await api.get('/jobs'); 
+        // Filter or fetch specific interview data here
         setInterviews([]);
       }
     } catch (error: any) {
