@@ -52,19 +52,23 @@ const ManageStudents = () => {
     setLoading(true);
     try {
       const data = await api.get('/users');
+      // Ensure data is an array before filtering
       const studentList = Array.isArray(data) ? data.filter((u: any) => u.role === 'student') : [];
       setStudents(studentList);
     } catch (error: any) {
-      showError(error.message);
+      console.error("Error fetching students:", error);
+      showError("Failed to load student records");
     } finally {
       setLoading(false);
     }
   };
 
-  const filteredStudents = students.filter(s => 
-    `${s.firstName} ${s.lastName}`.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    s.email?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredStudents = students.filter(s => {
+    const fullName = `${s.firstName || ''} ${s.lastName || ''}`.toLowerCase();
+    const email = (s.email || '').toLowerCase();
+    const query = searchQuery.toLowerCase();
+    return fullName.includes(query) || email.includes(query);
+  });
 
   const handleStatusToggle = (name: string) => {
     showSuccess(`Updated status for ${name}`);
@@ -161,19 +165,19 @@ const ManageStudents = () => {
                           <div className="flex items-center gap-3">
                             <Avatar className="h-10 w-10 border-2 border-background shadow-sm">
                               <AvatarFallback className="bg-primary/10 text-primary font-bold">
-                                {student.firstName?.[0]}{student.lastName?.[0]}
+                                {student.firstName?.[0] || ''}{student.lastName?.[0] || ''}
                               </AvatarFallback>
                             </Avatar>
                             <div className="flex flex-col">
                               <span className="font-bold text-foreground group-hover:text-primary transition-colors">
-                                {student.firstName} {student.lastName}
+                                {student.firstName || 'Unknown'} {student.lastName || ''}
                               </span>
-                              <span className="text-xs text-muted-foreground">ID: {student.id.slice(0, 8)}</span>
+                              <span className="text-xs text-muted-foreground">ID: {String(student.id).slice(0, 8)}</span>
                             </div>
                           </div>
                         </TableCell>
                         <TableCell className="text-muted-foreground font-medium">
-                          {student.email}
+                          {student.email || 'No email'}
                         </TableCell>
                         <TableCell>
                           <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-600 border-none font-bold px-3">
@@ -200,7 +204,7 @@ const ManageStudents = () => {
                               <DropdownMenuSeparator />
                               <DropdownMenuItem 
                                 className="gap-2 text-destructive focus:text-destructive cursor-pointer"
-                                onClick={() => handleStatusToggle(student.firstName)}
+                                onClick={() => handleStatusToggle(student.firstName || 'Student')}
                               >
                                 <UserX className="w-4 h-4" /> Deactivate Account
                               </DropdownMenuItem>
