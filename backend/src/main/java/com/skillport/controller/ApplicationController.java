@@ -19,6 +19,11 @@ public class ApplicationController {
         return applicationRepository.findByStudentId(studentId);
     }
 
+    @GetMapping("/job/{jobId}")
+    public List<Application> getJobApplications(@PathVariable Long jobId) {
+        return applicationRepository.findByJobId(jobId);
+    }
+
     @PostMapping
     public Application applyForJob(@RequestBody Application application) {
         return applicationRepository.save(application);
