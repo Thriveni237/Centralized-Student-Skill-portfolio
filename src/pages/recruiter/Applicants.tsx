@@ -7,7 +7,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { ArrowLeft, Mail, CheckCircle2, XCircle, Loader2, User, AlertCircle } from 'lucide-react';
+import { ArrowLeft, Mail, CheckCircle2, XCircle, Loader2, User, AlertCircle, RefreshCw } from 'lucide-react';
 import { showSuccess, showError } from '@/utils/toast';
 import { api } from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
@@ -19,15 +19,23 @@ const Applicants = () => {
   const [loading, setLoading] = useState(true);
   const [jobTitle, setJobTitle] = useState("Job Posting");
   const [error, setError] = useState<string | null>(null);
+  const [backendStatus, setBackendStatus] = useState<string>("Checking...");
 
   useEffect(() => {
+    checkBackend();
     if (jobId) {
       fetchApplicants();
-    } else {
-      setError("No Job ID provided in the URL.");
-      setLoading(false);
     }
   }, [jobId]);
+
+  const checkBackend = async () => {
+    try {
+      const status = await api.get('/applications/health');
+      setBackendStatus(status || "Active");
+    } catch (e) {
+      setBackendStatus("Unreachable (404)");
+    }
+  };
 
   const fetchApplicants = async () => {
     setLoading(true);
@@ -53,19 +61,14 @@ const Applicants = () => {
       }
 
       // 1. Fetch the job details
-      try {
-        const jobs = await api.get(`/jobs`);
-        const currentJob = Array.isArray(jobs) ? jobs.find(j => String(j.id) === jobId) : null;
-        if (currentJob) setJobTitle(currentJob.title);
-      } catch (e) {
-        console.warn("Could not fetch job title", e);
-      }
+      const jobs = await api.get(`/jobs`);
+      const currentJob = Array.isArray(jobs) ? jobs.find(j => String(j.id) === jobId) : null;
+      if (currentJob) setJobTitle(currentJob.title);
 
       // 2. Fetch applications for this job
       const apps = await api.get(`/applications/job/${jobId}`);
       
       if (Array.isArray(apps)) {
-        // 3. Fetch student profiles for each application
         const enrichedApps = await Promise.all(apps.map(async (app: any) => {
           try {
             const student = await api.get(`/users/${app.studentId}`);
@@ -79,9 +82,7 @@ const Applicants = () => {
         setApplicants([]);
       }
     } catch (err: any) {
-      const msg = err.message || "Failed to load applicants";
-      setError(msg);
-      showError(msg);
+      setError(err.message || "Failed to load applicants");
     } finally {
       setLoading(false);
     }
@@ -102,16 +103,21 @@ const Applicants = () => {
   return (
     <DashboardLayout role="recruiter">
       <div className="space-y-8">
-        <div className="flex items-center gap-4">
-          <Link to="/dashboard/recruiter/jobs">
-            <Button variant="ghost" size="icon">
-              <ArrowLeft className="w-5 h-5" />
-            </Button>
-          </Link>
-          <div>
-            <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Applicants</h1>
-            <p className="text-slate-500 dark:text-slate-400">Reviewing candidates for {jobTitle}</p>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Link to="/dashboard/recruiter/jobs">
+              <Button variant="ghost" size="icon">
+                <ArrowLeft className="w-5 h-5" />
+              </Button>
+            </Link>
+            <div>
+              <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Applicants</h1>
+              <p className="text-slate-500 dark:text-slate-400">Reviewing candidates for {jobTitle}</p>
+            </div>
           </div>
+          <Badge variant={backendStatus.includes("Unreachable") ? "destructive" : "secondary"} className="gap-2">
+            Backend: {backendStatus}
+          </Badge>
         </div>
 
         {loading ? (
@@ -124,10 +130,16 @@ const Applicants = () => {
             <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
             <h3 className="text-lg font-bold text-red-700 dark:text-red-400">Backend Error (404)</h3>
             <p className="text-red-600 dark:text-red-500 mt-2 max-w-md mx-auto">
-              The server couldn't find the application endpoint. This usually means the backend needs to be rebuilt to include the new code.
+              The application endpoint is missing. This happens when the backend hasn't been rebuilt after code changes.
             </p>
+            <div className="mt-8 p-4 bg-white dark:bg-slate-800 rounded-xl border shadow-sm inline-block">
+              <p className="text-sm font-bold text-slate-900 dark:text-white mb-2">Action Required:</p>
+              <p className="text-sm text-slate-600 dark:text-slate-400">Click the <strong>Rebuild</strong> button above the chat input.</p>
+            </div>
             <div className="mt-6 flex justify-center gap-4">
-              <Button onClick={fetchApplicants} variant="outline">Try Again</Button>
+              <Button onClick={() => { checkBackend(); fetchApplicants(); }} variant="outline" className="gap-2">
+                <RefreshCw className="w-4 h-4" /> Retry Connection
+              </Button>
             </div>
           </div>
         ) : applicants.length > 0 ? (
