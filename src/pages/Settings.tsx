@@ -13,10 +13,12 @@ import { showSuccess, showError } from '@/utils/toast';
 import { useAuth } from '@/context/AuthContext';
 import { api } from '@/lib/api';
 import { useNavigate } from 'react-router-dom';
+import { useTheme } from 'next-themes';
 
 const Settings = () => {
   const { user, isDemo, login, signOut } = useAuth();
   const navigate = useNavigate();
+  const { setTheme, theme } = useTheme();
   const [isLoading, setIsLoading] = useState(false);
   const [activeTab, setActiveTab] = useState('general');
   
@@ -24,7 +26,7 @@ const Settings = () => {
     firstName: user?.firstName || '',
     lastName: user?.lastName || '',
     language: user?.language || 'English (US)',
-    darkMode: user?.darkMode || false,
+    darkMode: theme === 'dark',
     notifMessages: user?.notifMessages ?? true,
     notifApplications: user?.notifApplications ?? true,
     notifMarketing: user?.notifMarketing ?? false,
@@ -34,19 +36,18 @@ const Settings = () => {
 
   useEffect(() => {
     if (user) {
-      setFormData({
+      setFormData(prev => ({
+        ...prev,
         firstName: user.firstName || '',
         lastName: user.lastName || '',
         language: user.language || 'English (US)',
-        darkMode: user.darkMode || false,
+        darkMode: theme === 'dark',
         notifMessages: user.notifMessages ?? true,
         notifApplications: user.notifApplications ?? true,
         notifMarketing: user.notifMarketing ?? false,
-        newPassword: '',
-        confirmPassword: ''
-      });
+      }));
     }
-  }, [user]);
+  }, [user, theme]);
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -105,8 +106,8 @@ const Settings = () => {
     <DashboardLayout>
       <div className="space-y-8">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Account Settings</h1>
-          <p className="text-slate-500">Manage your account preferences and security settings.</p>
+          <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Account Settings</h1>
+          <p className="text-slate-500 dark:text-slate-400">Manage your account preferences and security settings.</p>
         </div>
 
         <div className="grid lg:grid-cols-4 gap-8">
@@ -132,7 +133,7 @@ const Settings = () => {
           <div className="lg:col-span-3 space-y-6">
             <form onSubmit={handleSave}>
               {activeTab === 'general' && (
-                <Card className="border-none shadow-sm animate-in fade-in duration-300">
+                <Card className="border-none shadow-sm animate-in fade-in duration-300 dark:bg-slate-900">
                   <CardHeader>
                     <CardTitle>General Preferences</CardTitle>
                     <CardDescription>Update your basic account information.</CardDescription>
@@ -169,19 +170,22 @@ const Settings = () => {
 
                     <div className="space-y-4">
                       <h4 className="text-sm font-medium">Appearance</h4>
-                      <div className="flex items-center justify-between p-4 rounded-xl border bg-slate-50/50">
+                      <div className="flex items-center justify-between p-4 rounded-xl border bg-slate-50/50 dark:bg-slate-800/50 dark:border-slate-800">
                         <div className="flex items-center gap-3">
-                          <div className="p-2 bg-white rounded-lg border shadow-sm">
+                          <div className="p-2 bg-white dark:bg-slate-900 rounded-lg border shadow-sm dark:border-slate-700">
                             {formData.darkMode ? <Moon className="w-4 h-4 text-blue-600" /> : <Sun className="w-4 h-4 text-amber-500" />}
                           </div>
                           <div>
                             <p className="text-sm font-medium">Dark Mode</p>
-                            <p className="text-xs text-slate-500">Switch between light and dark themes.</p>
+                            <p className="text-xs text-slate-500 dark:text-slate-400">Switch between light and dark themes.</p>
                           </div>
                         </div>
                         <Switch 
                           checked={formData.darkMode} 
-                          onCheckedChange={checked => setFormData({...formData, darkMode: checked})}
+                          onCheckedChange={checked => {
+                            setFormData({...formData, darkMode: checked});
+                            setTheme(checked ? 'dark' : 'light');
+                          }}
                         />
                       </div>
                     </div>
@@ -190,7 +194,7 @@ const Settings = () => {
               )}
 
               {activeTab === 'security' && (
-                <Card className="border-none shadow-sm animate-in fade-in duration-300">
+                <Card className="border-none shadow-sm animate-in fade-in duration-300 dark:bg-slate-900">
                   <CardHeader>
                     <CardTitle>Security Settings</CardTitle>
                     <CardDescription>Update your password and secure your account.</CardDescription>
@@ -219,7 +223,7 @@ const Settings = () => {
               )}
 
               {activeTab === 'notifications' && (
-                <Card className="border-none shadow-sm animate-in fade-in duration-300">
+                <Card className="border-none shadow-sm animate-in fade-in duration-300 dark:bg-slate-900">
                   <CardHeader>
                     <CardTitle>Email Notifications</CardTitle>
                     <CardDescription>Choose what updates you want to receive.</CardDescription>
@@ -234,7 +238,7 @@ const Settings = () => {
                         <div key={item.id} className="flex items-center justify-between">
                           <div>
                             <p className="text-sm font-medium">{item.label}</p>
-                            <p className="text-xs text-slate-500">{item.desc}</p>
+                            <p className="text-xs text-slate-500 dark:text-slate-400">{item.desc}</p>
                           </div>
                           <Switch 
                             checked={(formData as any)[item.id]} 
@@ -248,7 +252,7 @@ const Settings = () => {
               )}
 
               {activeTab === 'privacy' && (
-                <Card className="border-none shadow-sm animate-in fade-in duration-300">
+                <Card className="border-none shadow-sm animate-in fade-in duration-300 dark:bg-slate-900">
                   <CardHeader>
                     <CardTitle>Privacy Settings</CardTitle>
                     <CardDescription>Control your profile visibility and data.</CardDescription>
@@ -257,7 +261,7 @@ const Settings = () => {
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-sm font-medium">Public Profile</p>
-                        <p className="text-xs text-slate-500">Allow recruiters to find your profile in search.</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">Allow recruiters to find your profile in search.</p>
                       </div>
                       <Switch defaultChecked />
                     </div>
@@ -265,7 +269,7 @@ const Settings = () => {
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-sm font-medium">Show Email</p>
-                        <p className="text-xs text-slate-500">Display your email address on your public portfolio.</p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400">Display your email address on your public portfolio.</p>
                       </div>
                       <Switch />
                     </div>
@@ -282,7 +286,7 @@ const Settings = () => {
             </form>
 
             {activeTab === 'general' && (
-              <Card className="border-none shadow-sm border-red-100 bg-red-50/30 mt-6">
+              <Card className="border-none shadow-sm border-red-100 bg-red-50/30 mt-6 dark:bg-red-900/10 dark:border-red-900/20">
                 <CardHeader>
                   <CardTitle className="text-red-600 flex items-center gap-2">
                     <Trash2 className="w-5 h-5" /> Danger Zone
@@ -292,8 +296,8 @@ const Settings = () => {
                 <CardContent>
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm font-medium text-slate-900">Delete Account</p>
-                      <p className="text-xs text-slate-500">Permanently remove your account and all data.</p>
+                      <p className="text-sm font-medium text-slate-900 dark:text-white">Delete Account</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400">Permanently remove your account and all data.</p>
                     </div>
                     <Button variant="destructive" size="sm" onClick={handleDeleteAccount}>Delete Account</Button>
                   </div>
