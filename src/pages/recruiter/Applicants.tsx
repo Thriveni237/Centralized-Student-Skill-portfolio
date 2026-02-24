@@ -7,7 +7,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { ArrowLeft, Mail, CheckCircle2, XCircle, Loader2, User } from 'lucide-react';
+import { ArrowLeft, Mail, CheckCircle2, XCircle, Loader2, User, AlertCircle } from 'lucide-react';
 import { showSuccess, showError } from '@/utils/toast';
 import { api } from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
@@ -18,19 +18,25 @@ const Applicants = () => {
   const [applicants, setApplicants] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [jobTitle, setJobTitle] = useState("Job Posting");
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetchApplicants();
+    if (jobId) {
+      fetchApplicants();
+    }
   }, [jobId]);
 
   const fetchApplicants = async () => {
     setLoading(true);
+    setError(null);
     try {
       if (isDemo) {
         setApplicants([
           {
             id: '1',
             status: 'Pending',
+            appliedAt: new Date().toISOString(),
+            studentId: 'demo-student-1',
             student: {
               firstName: 'Alex',
               lastName: 'Johnson',
@@ -44,9 +50,13 @@ const Applicants = () => {
       }
 
       // 1. Fetch the job details to get the title
-      const job = await api.get(`/jobs`);
-      const currentJob = Array.isArray(job) ? job.find(j => String(j.id) === jobId) : null;
-      if (currentJob) setJobTitle(currentJob.title);
+      try {
+        const jobs = await api.get(`/jobs`);
+        const currentJob = Array.isArray(jobs) ? jobs.find(j => String(j.id) === jobId) : null;
+        if (currentJob) setJobTitle(currentJob.title);
+      } catch (e) {
+        console.error("Failed to fetch job title", e);
+      }
 
       // 2. Fetch applications for this job
       const apps = await api.get(`/applications/job/${jobId}`);
@@ -58,6 +68,7 @@ const Applicants = () => {
             const student = await api.get(`/users/${app.studentId}`);
             return { ...app, student };
           } catch (e) {
+            console.error(`Failed to fetch student ${app.studentId}`, e);
             return { ...app, student: { firstName: 'Unknown', lastName: 'User', email: 'N/A' } };
           }
         }));
@@ -65,8 +76,10 @@ const Applicants = () => {
       } else {
         setApplicants([]);
       }
-    } catch (error: any) {
-      showError("Failed to load applicants");
+    } catch (err: any) {
+      const msg = err.message || "Failed to load applicants";
+      setError(msg);
+      showError(msg);
     } finally {
       setLoading(false);
     }
@@ -100,8 +113,20 @@ const Applicants = () => {
         </div>
 
         {loading ? (
-          <div className="flex justify-center py-20">
-            <Loader2 className="w-8 h-8 animate-spin text-primary" />
+          <div className="flex flex-col items-center justify-center py-20 space-y-4">
+            <Loader2 className="w-10 h-10 animate-spin text-primary" />
+            <p className="text-muted-foreground">Fetching applicant data...</p>
+          </div>
+        ) : error ? (
+          <div className="text-center py-20 bg-red-50 dark:bg-red-900/10 rounded-2xl border border-red-100 dark:border-red-900/20">
+            <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
+            <h3 className="text-lg font-bold text-red-700 dark:text-red-400">Connection Error</h3>
+            <p className="text-red-600 dark:text-red-500 mt-2 max-w-md mx-auto">
+              {error}. Please ensure the backend is running and you have rebuilt the project.
+            </p>
+            <Button onClick={fetchApplicants} variant="outline" className="mt-6 border-red-200 text-red-700 hover:bg-red-50">
+              Try Again
+            </Button>
           </div>
         ) : applicants.length > 0 ? (
           <div className="grid gap-4">
