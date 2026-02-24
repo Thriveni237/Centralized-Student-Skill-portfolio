@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import DashboardLayout from '@/components/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -20,7 +20,9 @@ import {
   CheckCircle2, 
   XCircle, 
   Building2,
-  ExternalLink
+  ExternalLink,
+  Loader2,
+  Database
 } from 'lucide-react';
 import { 
   DropdownMenu, 
@@ -28,21 +30,34 @@ import {
   DropdownMenuItem, 
   DropdownMenuTrigger 
 } from '@/components/ui/dropdown-menu';
-import { showSuccess } from '@/utils/toast';
+import { showSuccess, showError } from '@/utils/toast';
+import { api } from '@/lib/api';
 
 const ManageRecruiters = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [recruiters, setRecruiters] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const recruiters = [
-    { id: '1', name: 'TechFlow Solutions', contact: 'Sarah Miller', email: 'sarah@techflow.io', status: 'Verified', jobs: 5 },
-    { id: '2', name: 'CloudScale AI', contact: 'David Chen', email: 'd.chen@cloudscale.ai', status: 'Pending', jobs: 2 },
-    { id: '3', name: 'Creative Pulse', contact: 'Emma Wilson', email: 'emma@creativepulse.com', status: 'Verified', jobs: 8 },
-    { id: '4', name: 'DataDynamics', contact: 'Robert Fox', email: 'robert@datadynamics.com', status: 'Suspended', jobs: 0 },
-  ];
+  useEffect(() => {
+    fetchRecruiters();
+  }, []);
+
+  const fetchRecruiters = async () => {
+    setLoading(true);
+    try {
+      const data = await api.get('/users');
+      const recruiterList = Array.isArray(data) ? data.filter((u: any) => u.role === 'recruiter') : [];
+      setRecruiters(recruiterList);
+    } catch (error: any) {
+      showError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const filteredRecruiters = recruiters.filter(r => 
-    r.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-    r.contact.toLowerCase().includes(searchQuery.toLowerCase())
+    `${r.firstName} ${r.lastName}`.toLowerCase().includes(searchQuery.toLowerCase()) || 
+    r.email?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleVerify = (name: string) => {
@@ -57,7 +72,12 @@ const ManageRecruiters = () => {
             <h1 className="text-3xl font-bold text-foreground">Manage Recruiters</h1>
             <p className="text-muted-foreground">Verify and monitor hiring partners on the platform.</p>
           </div>
-          <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">Invite Partner</Button>
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={fetchRecruiters} className="gap-2">
+              <Database className="w-4 h-4" /> Refresh Data
+            </Button>
+            <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">Invite Partner</Button>
+          </div>
         </div>
 
         <Card className="border-none shadow-sm bg-card">
@@ -65,7 +85,7 @@ const ManageRecruiters = () => {
             <div className="relative max-w-sm">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input 
-                placeholder="Search companies or contacts..." 
+                placeholder="Search recruiters..." 
                 className="pl-10"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -73,78 +93,74 @@ const ManageRecruiters = () => {
             </div>
           </CardHeader>
           <CardContent className="pt-6">
-            <div className="rounded-md border border-border">
-              <Table>
-                <TableHeader>
-                  <TableRow className="bg-muted/50">
-                    <TableHead className="text-foreground">Company</TableHead>
-                    <TableHead className="text-foreground">Primary Contact</TableHead>
-                    <TableHead className="text-foreground">Active Jobs</TableHead>
-                    <TableHead className="text-foreground">Status</TableHead>
-                    <TableHead className="text-right text-foreground">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredRecruiters.map((recruiter) => (
-                    <TableRow key={recruiter.id} className="border-border">
-                      <TableCell>
-                        <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 bg-muted rounded flex items-center justify-center">
-                            <Building2 className="w-4 h-4 text-muted-foreground" />
-                          </div>
-                          <span className="font-medium text-foreground">{recruiter.name}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex flex-col">
-                          <span className="text-sm font-medium text-foreground">{recruiter.contact}</span>
-                          <span className="text-xs text-muted-foreground">{recruiter.email}</span>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <Badge variant="secondary" className="font-normal">
-                          {recruiter.jobs} Jobs
-                        </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <Badge 
-                          variant="secondary" 
-                          className={
-                            recruiter.status === 'Verified' ? 'bg-emerald-500/10 text-emerald-500' : 
-                            recruiter.status === 'Suspended' ? 'bg-destructive/10 text-destructive' : 'bg-muted text-muted-foreground'
-                          }
-                        >
-                          {recruiter.status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="icon">
-                              <MoreVertical className="w-4 h-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem className="gap-2">
-                              <ExternalLink className="w-4 h-4" /> View Profile
-                            </DropdownMenuItem>
-                            <DropdownMenuItem 
-                              className="gap-2"
-                              onClick={() => handleVerify(recruiter.name)}
-                            >
-                              <CheckCircle2 className="w-4 h-4 text-emerald-500" /> Verify Partner
-                            </DropdownMenuItem>
-                            <DropdownMenuItem className="gap-2 text-destructive">
-                              <XCircle className="w-4 h-4" /> Suspend Access
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
+            {loading ? (
+              <div className="flex justify-center py-12">
+                <Loader2 className="w-8 h-8 animate-spin text-primary" />
+              </div>
+            ) : (
+              <div className="rounded-md border border-border">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="bg-muted/50">
+                      <TableHead className="text-foreground">Recruiter Name</TableHead>
+                      <TableHead className="text-foreground">Email</TableHead>
+                      <TableHead className="text-foreground">Status</TableHead>
+                      <TableHead className="text-right text-foreground">Actions</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredRecruiters.map((recruiter) => (
+                      <TableRow key={recruiter.id} className="border-border">
+                        <TableCell>
+                          <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 bg-muted rounded flex items-center justify-center">
+                              <Building2 className="w-4 h-4 text-muted-foreground" />
+                            </div>
+                            <span className="font-medium text-foreground">{recruiter.firstName} {recruiter.lastName}</span>
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-muted-foreground">{recruiter.email}</TableCell>
+                        <TableCell>
+                          <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-500 border-none">
+                            Verified
+                          </Badge>
+                        </TableCell>
+                        <TableCell className="text-right">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon">
+                                <MoreVertical className="w-4 h-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem className="gap-2">
+                                <ExternalLink className="w-4 h-4" /> View Profile
+                              </DropdownMenuItem>
+                              <DropdownMenuItem 
+                                className="gap-2"
+                                onClick={() => handleVerify(recruiter.firstName)}
+                              >
+                                <CheckCircle2 className="w-4 h-4 text-emerald-500" /> Verify Partner
+                              </DropdownMenuItem>
+                              <DropdownMenuItem className="gap-2 text-destructive">
+                                <XCircle className="w-4 h-4" /> Suspend Access
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                    {filteredRecruiters.length === 0 && (
+                      <TableRow>
+                        <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
+                          No recruiters found in the database.
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
