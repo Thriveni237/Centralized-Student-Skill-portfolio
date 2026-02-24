@@ -16,7 +16,7 @@ const StudentDashboard = () => {
     skills: 0,
     projects: 0,
     certs: 0,
-    views: 142
+    views: 0
   });
   const [loading, setLoading] = useState(!isDemo);
 
@@ -25,6 +25,12 @@ const StudentDashboard = () => {
       fetchDashboardData();
     } else if (isDemo) {
       setProfile(user);
+      setStats({
+        skills: 5,
+        projects: 3,
+        certs: 2,
+        views: 142
+      });
       setLoading(false);
     }
   }, [user, isDemo]);
@@ -43,7 +49,7 @@ const StudentDashboard = () => {
         skills: skills?.length || 0,
         projects: projects?.length || 0,
         certs: certs?.length || 0,
-        views: 142
+        views: profileData?.views || 0
       });
     } catch (error) {
       console.error("Error fetching dashboard data:", error);
