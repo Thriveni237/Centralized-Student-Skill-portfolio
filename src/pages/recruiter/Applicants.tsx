@@ -23,6 +23,9 @@ const Applicants = () => {
   useEffect(() => {
     if (jobId) {
       fetchApplicants();
+    } else {
+      setError("No Job ID provided in the URL.");
+      setLoading(false);
     }
   }, [jobId]);
 
@@ -49,26 +52,25 @@ const Applicants = () => {
         return;
       }
 
-      // 1. Fetch the job details to get the title
+      // 1. Fetch the job details
       try {
         const jobs = await api.get(`/jobs`);
         const currentJob = Array.isArray(jobs) ? jobs.find(j => String(j.id) === jobId) : null;
         if (currentJob) setJobTitle(currentJob.title);
       } catch (e) {
-        console.error("Failed to fetch job title", e);
+        console.warn("Could not fetch job title", e);
       }
 
       // 2. Fetch applications for this job
       const apps = await api.get(`/applications/job/${jobId}`);
       
-      if (Array.isArray(apps) && apps.length > 0) {
+      if (Array.isArray(apps)) {
         // 3. Fetch student profiles for each application
         const enrichedApps = await Promise.all(apps.map(async (app: any) => {
           try {
             const student = await api.get(`/users/${app.studentId}`);
             return { ...app, student };
           } catch (e) {
-            console.error(`Failed to fetch student ${app.studentId}`, e);
             return { ...app, student: { firstName: 'Unknown', lastName: 'User', email: 'N/A' } };
           }
         }));
@@ -115,18 +117,18 @@ const Applicants = () => {
         {loading ? (
           <div className="flex flex-col items-center justify-center py-20 space-y-4">
             <Loader2 className="w-10 h-10 animate-spin text-primary" />
-            <p className="text-muted-foreground">Fetching applicant data...</p>
+            <p className="text-muted-foreground">Loading applicants...</p>
           </div>
         ) : error ? (
           <div className="text-center py-20 bg-red-50 dark:bg-red-900/10 rounded-2xl border border-red-100 dark:border-red-900/20">
             <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-            <h3 className="text-lg font-bold text-red-700 dark:text-red-400">Connection Error</h3>
+            <h3 className="text-lg font-bold text-red-700 dark:text-red-400">Backend Error (404)</h3>
             <p className="text-red-600 dark:text-red-500 mt-2 max-w-md mx-auto">
-              {error}. Please ensure the backend is running and you have rebuilt the project.
+              The server couldn't find the application endpoint. This usually means the backend needs to be rebuilt to include the new code.
             </p>
-            <Button onClick={fetchApplicants} variant="outline" className="mt-6 border-red-200 text-red-700 hover:bg-red-50">
-              Try Again
-            </Button>
+            <div className="mt-6 flex justify-center gap-4">
+              <Button onClick={fetchApplicants} variant="outline">Try Again</Button>
+            </div>
           </div>
         ) : applicants.length > 0 ? (
           <div className="grid gap-4">

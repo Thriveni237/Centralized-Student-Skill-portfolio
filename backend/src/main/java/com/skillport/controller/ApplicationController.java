@@ -32,7 +32,9 @@ public class ApplicationController {
     @PutMapping("/{id}/status")
     public Application updateStatus(@PathVariable Long id, @RequestBody String status) {
         return applicationRepository.findById(id).map(app -> {
-            app.setStatus(status);
+            // Remove quotes if the status is sent as a raw JSON string
+            String cleanStatus = status.replace("\"", "");
+            app.setStatus(cleanStatus);
             return applicationRepository.save(app);
         }).orElse(null);
     }
