@@ -79,11 +79,11 @@ const Jobs = () => {
       <div className="space-y-8">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900">Job Board</h1>
-            <p className="text-slate-500">Discover opportunities that match your skill set.</p>
+            <h1 className="text-3xl font-bold text-foreground">Job Board</h1>
+            <p className="text-muted-foreground">Discover opportunities that match your skill set.</p>
           </div>
           <div className="relative w-full md:w-80">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input 
               placeholder="Search jobs, companies..." 
               className="pl-10"
@@ -95,23 +95,23 @@ const Jobs = () => {
 
         {loading ? (
           <div className="flex justify-center py-20">
-            <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+            <Loader2 className="w-8 h-8 animate-spin text-primary" />
           </div>
         ) : (
           <div className="grid gap-6">
             {filteredJobs.length > 0 ? filteredJobs.map((job) => (
-              <Card key={job.id} className="border-none shadow-sm hover:shadow-md transition-all group">
+              <Card key={job.id} className="border-none shadow-sm hover:shadow-md transition-all group bg-card">
                 <CardContent className="p-6">
                   <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
                     <div className="flex gap-4">
-                      <div className="w-14 h-14 bg-slate-100 rounded-xl flex items-center justify-center shrink-0">
-                        <Building2 className="w-7 h-7 text-slate-400" />
+                      <div className="w-14 h-14 bg-muted rounded-xl flex items-center justify-center shrink-0">
+                        <Building2 className="w-7 h-7 text-muted-foreground" />
                       </div>
                       <div className="space-y-1">
-                        <h3 className="text-xl font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
+                        <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
                           {job.title}
                         </h3>
-                        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-slate-500">
+                        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
                           <span className="flex items-center gap-1"><Building2 className="w-3.5 h-3.5" /> {job.company}</span>
                           <span className="flex items-center gap-1"><MapPin className="w-3.5 h-3.5" /> {job.location}</span>
                           <span className="flex items-center gap-1"><Briefcase className="w-3.5 h-3.5" /> {job.type}</span>
@@ -120,15 +120,15 @@ const Jobs = () => {
                     </div>
                     
                     <div className="flex flex-col sm:flex-row lg:flex-col items-start sm:items-center lg:items-end gap-4">
-                      <div className="flex items-center gap-4 text-sm font-medium text-slate-700">
-                        <span className="flex items-center gap-1 text-emerald-600"><DollarSign className="w-4 h-4" /> {job.salary || 'Competitive'}</span>
-                        <span className="flex items-center gap-1 text-slate-400"><Clock className="w-4 h-4" /> Just now</span>
+                      <div className="flex items-center gap-4 text-sm font-medium text-foreground/80">
+                        <span className="flex items-center gap-1 text-emerald-500"><DollarSign className="w-4 h-4" /> {job.salary || 'Competitive'}</span>
+                        <span className="flex items-center gap-1 text-muted-foreground"><Clock className="w-4 h-4" /> Just now</span>
                       </div>
                       <div className="flex gap-2">
                         <Button variant="outline" size="sm">View Details</Button>
                         <Button 
                           size="sm" 
-                          className="bg-blue-600 hover:bg-blue-700" 
+                          className="bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/10" 
                           onClick={() => handleApply(job)}
                           disabled={applyingId === job.id}
                         >
@@ -140,7 +140,7 @@ const Jobs = () => {
                   
                   <div className="mt-6 flex flex-wrap gap-2">
                     {job.tags?.split(',').map((tag: string) => (
-                      <Badge key={tag} variant="secondary" className="bg-blue-50 text-blue-700 hover:bg-blue-100 border-none font-normal">
+                      <Badge key={tag} variant="secondary" className="bg-primary/10 text-primary hover:bg-primary/20 border-none font-normal">
                         {tag.trim()}
                       </Badge>
                     ))}
@@ -148,8 +148,8 @@ const Jobs = () => {
                 </CardContent>
               </Card>
             )) : (
-              <div className="text-center py-20 bg-white rounded-2xl border border-dashed">
-                <p className="text-slate-500">No jobs found matching your search.</p>
+              <div className="text-center py-20 bg-card rounded-2xl border border-dashed border-border">
+                <p className="text-muted-foreground">No jobs found matching your search.</p>
               </div>
             )}
           </div>

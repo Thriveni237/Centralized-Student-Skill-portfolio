@@ -122,14 +122,14 @@ const Projects = () => {
       <div className="space-y-8">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900">Featured Projects</h1>
-            <p className="text-slate-500">Showcase your best work to potential recruiters.</p>
+            <h1 className="text-3xl font-bold text-foreground">Featured Projects</h1>
+            <p className="text-muted-foreground">Showcase your best work to potential recruiters.</p>
           </div>
           <Button 
             onClick={() => setIsAdding(!isAdding)} 
             className={cn(
-              "transition-all",
-              isAdding ? "bg-slate-200 text-slate-900 hover:bg-slate-300" : "bg-blue-600 hover:bg-blue-700"
+              "transition-all shadow-lg",
+              isAdding ? "bg-secondary text-secondary-foreground hover:bg-secondary/80" : "bg-primary hover:bg-primary/90 text-primary-foreground"
             )}
           >
             {isAdding ? <><X className="w-4 h-4 mr-2" /> Cancel</> : <><Plus className="w-4 h-4 mr-2" /> Add New Project</>}
@@ -137,16 +137,16 @@ const Projects = () => {
         </div>
 
         {isAdding && (
-          <Card className="border-none shadow-xl animate-in fade-in slide-in-from-top-4 duration-300">
+          <Card className="border-none shadow-xl animate-in fade-in slide-in-from-top-4 duration-300 bg-card">
             <CardHeader>
-              <CardTitle>Project Details</CardTitle>
+              <CardTitle className="text-foreground">Project Details</CardTitle>
               <CardDescription>Provide information about what you built and the tech you used.</CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleAddProject} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <Label>Project Title</Label>
+                    <Label className="text-foreground">Project Title</Label>
                     <Input 
                       required 
                       placeholder="e.g. Portfolio Website"
@@ -155,7 +155,7 @@ const Projects = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Tech Stack (comma separated)</Label>
+                    <Label className="text-foreground">Tech Stack (comma separated)</Label>
                     <Input 
                       placeholder="React, TypeScript, Tailwind" 
                       value={formData.tags} 
@@ -165,7 +165,7 @@ const Projects = () => {
                 </div>
                 
                 <div className="space-y-2">
-                  <Label>Description</Label>
+                  <Label className="text-foreground">Description</Label>
                   <Textarea 
                     required 
                     rows={4}
@@ -177,7 +177,7 @@ const Projects = () => {
 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <Label className="flex items-center gap-2"><Github className="w-4 h-4" /> GitHub Repository URL</Label>
+                    <Label className="flex items-center gap-2 text-foreground"><Github className="w-4 h-4" /> GitHub Repository URL</Label>
                     <Input 
                       placeholder="github.com/username/repo"
                       value={formData.github} 
@@ -185,7 +185,7 @@ const Projects = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label className="flex items-center gap-2"><Globe className="w-4 h-4" /> Live Demo URL</Label>
+                    <Label className="flex items-center gap-2 text-foreground"><Globe className="w-4 h-4" /> Live Demo URL</Label>
                     <Input 
                       placeholder="project-demo.com"
                       value={formData.link} 
@@ -194,7 +194,7 @@ const Projects = () => {
                   </div>
                 </div>
 
-                <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 h-12 text-lg">
+                <Button type="submit" className="w-full bg-primary hover:bg-primary/90 text-primary-foreground h-12 text-lg shadow-lg">
                   Publish Project
                 </Button>
               </form>
@@ -204,39 +204,39 @@ const Projects = () => {
 
         {loading ? (
           <div className="flex justify-center py-20">
-            <Loader2 className="w-10 h-10 animate-spin text-blue-600" />
+            <Loader2 className="w-10 h-10 animate-spin text-primary" />
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {projects.length > 0 ? projects.map((project) => (
-              <Card key={project.id} className="border-none shadow-sm hover:shadow-xl transition-all group overflow-hidden flex flex-col">
-                <div className="h-2 bg-blue-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+              <Card key={project.id} className="border-none shadow-sm hover:shadow-xl transition-all group overflow-hidden flex flex-col bg-card">
+                <div className="h-2 bg-primary opacity-0 group-hover:opacity-100 transition-opacity" />
                 <CardHeader className="pb-4">
                   <div className="flex justify-between items-start">
-                    <div className="p-3 bg-blue-50 rounded-2xl">
-                      <FolderRoot className="w-6 h-6 text-blue-600" />
+                    <div className="p-3 bg-primary/10 rounded-2xl">
+                      <FolderRoot className="w-6 h-6 text-primary" />
                     </div>
                     <Button 
                       variant="ghost" 
                       size="icon" 
                       onClick={() => removeProject(project.id)} 
-                      className="text-slate-300 hover:text-red-600 hover:bg-red-50 transition-colors"
+                      className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>
                   </div>
-                  <CardTitle className="text-2xl font-bold text-slate-900 mt-4 group-hover:text-blue-600 transition-colors">
+                  <CardTitle className="text-2xl font-bold text-foreground mt-4 group-hover:text-primary transition-colors">
                     {project.title}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="flex-1 flex flex-col space-y-6">
-                  <p className="text-slate-600 leading-relaxed">
+                  <p className="text-muted-foreground leading-relaxed">
                     {project.description}
                   </p>
                   
                   <div className="flex flex-wrap gap-2">
                     {project.tags.split(',').map((tag, i) => (
-                      <Badge key={i} variant="secondary" className="bg-slate-100 text-slate-600 font-medium border-none">
+                      <Badge key={i} variant="secondary" className="bg-muted text-muted-foreground font-medium border-none">
                         {tag.trim()}
                       </Badge>
                     ))}
@@ -244,14 +244,14 @@ const Projects = () => {
 
                   <div className="pt-4 mt-auto flex gap-3">
                     {project.github && (
-                      <Button variant="outline" className="flex-1 gap-2 border-slate-200 hover:bg-slate-900 hover:text-white transition-all" asChild>
+                      <Button variant="outline" className="flex-1 gap-2 border-border hover:bg-foreground hover:text-background transition-all" asChild>
                         <a href={`https://${project.github}`} target="_blank" rel="noreferrer">
                           <Github className="w-4 h-4" /> Code
                         </a>
                       </Button>
                     )}
                     {project.link && (
-                      <Button className="flex-1 gap-2 bg-blue-600 hover:bg-blue-700" asChild>
+                      <Button className="flex-1 gap-2 bg-primary hover:bg-primary/90 text-primary-foreground shadow-lg shadow-primary/10" asChild>
                         <a href={`https://${project.link}`} target="_blank" rel="noreferrer">
                           <ExternalLink className="w-4 h-4" /> Demo
                         </a>
@@ -261,17 +261,17 @@ const Projects = () => {
                 </CardContent>
               </Card>
             )) : (
-              <div className="md:col-span-2 text-center py-20 bg-white rounded-3xl border-2 border-dashed border-slate-200">
-                <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <Layers className="w-10 h-10 text-slate-300" />
+              <div className="md:col-span-2 text-center py-20 bg-card rounded-3xl border-2 border-dashed border-border">
+                <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Layers className="w-10 h-10 text-muted-foreground/30" />
                 </div>
-                <h3 className="text-xl font-bold text-slate-900">No projects yet</h3>
-                <p className="text-slate-500 mt-2 max-w-xs mx-auto">
+                <h3 className="text-xl font-bold text-foreground">No projects yet</h3>
+                <p className="text-muted-foreground mt-2 max-w-xs mx-auto">
                   Start by adding your first project to showcase your skills to recruiters.
                 </p>
                 <Button 
                   variant="link" 
-                  className="mt-4 text-blue-600 font-bold"
+                  className="mt-4 text-primary font-bold"
                   onClick={() => setIsAdding(true)}
                 >
                   Add your first project

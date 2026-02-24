@@ -76,7 +76,7 @@ const StudentDashboard = () => {
     <DashboardLayout role="student">
       <div className="space-y-8">
         <div>
-          <h1 className="text-3xl font-bold">
+          <h1 className="text-3xl font-bold text-foreground">
             Welcome back, {displayName}!
           </h1>
           <p className="text-muted-foreground">Here's what's happening with your portfolio.</p>
@@ -84,14 +84,14 @@ const StudentDashboard = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {statCards.map((stat) => (
-            <Card key={stat.label} className="border-none shadow-sm">
+            <Card key={stat.label} className="border-none shadow-sm bg-card">
               <CardContent className="p-6 flex items-center gap-4">
                 <div className={cn("p-3 rounded-xl", stat.bg)}>
                   <stat.icon className={cn("w-6 h-6", stat.color)} />
                 </div>
                 <div>
                   <p className="text-sm font-medium text-muted-foreground">{stat.label}</p>
-                  <p className="text-2xl font-bold">{stat.value}</p>
+                  <p className="text-2xl font-bold text-foreground">{stat.value}</p>
                 </div>
               </CardContent>
             </Card>
@@ -99,9 +99,9 @@ const StudentDashboard = () => {
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8">
-          <Card className="lg:col-span-2 border-none shadow-sm">
+          <Card className="lg:col-span-2 border-none shadow-sm bg-card">
             <CardHeader>
-              <CardTitle>Profile Completion</CardTitle>
+              <CardTitle className="text-foreground">Profile Completion</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-2">
@@ -135,16 +135,16 @@ const StudentDashboard = () => {
             </CardContent>
           </Card>
 
-          <Card className="border-none shadow-sm">
+          <Card className="border-none shadow-sm bg-card">
             <CardHeader>
-              <CardTitle>Recent Activity</CardTitle>
+              <CardTitle className="text-foreground">Recent Activity</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
                 <div className="flex gap-4">
                   <div className="w-1 bg-primary/20 rounded-full" />
                   <div>
-                    <p className="text-sm font-medium">Profile last updated</p>
+                    <p className="text-sm font-medium text-foreground">Profile last updated</p>
                     <p className="text-xs text-muted-foreground">Just now</p>
                   </div>
                 </div>

@@ -85,7 +85,7 @@ const ResumeBuilder = () => {
     return (
       <DashboardLayout role="student">
         <div className="flex justify-center py-20">
-          <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
         </div>
       </DashboardLayout>
     );
@@ -98,14 +98,14 @@ const ResumeBuilder = () => {
       <div className="space-y-8">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900">Resume Builder</h1>
-            <p className="text-slate-500">Generate a professional PDF resume from your SkillPort data.</p>
+            <h1 className="text-3xl font-bold text-foreground">Resume Builder</h1>
+            <p className="text-muted-foreground">Generate a professional PDF resume from your SkillPort data.</p>
           </div>
           <div className="flex gap-2">
             <Button variant="outline" className="gap-2">
               <Eye className="w-4 h-4" /> Preview
             </Button>
-            <Button className="bg-blue-600 hover:bg-blue-700 gap-2" onClick={handleDownload} disabled={isGenerating}>
+            <Button className="bg-primary hover:bg-primary/90 text-primary-foreground gap-2 shadow-lg" onClick={handleDownload} disabled={isGenerating}>
               <Download className={cn("w-4 h-4", isGenerating && "animate-bounce")} />
               {isGenerating ? "Generating..." : "Download PDF"}
             </Button>
@@ -114,10 +114,10 @@ const ResumeBuilder = () => {
 
         <div className="grid lg:grid-cols-3 gap-8">
           <div className="lg:col-span-1 space-y-6">
-            <Card className="border-none shadow-sm">
+            <Card className="border-none shadow-sm bg-card">
               <CardHeader>
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <Layout className="w-5 h-5 text-blue-600" /> Choose Template
+                <CardTitle className="text-lg flex items-center gap-2 text-foreground">
+                  <Layout className="w-5 h-5 text-primary" /> Choose Template
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
@@ -128,37 +128,37 @@ const ResumeBuilder = () => {
                     className={cn(
                       "w-full p-4 rounded-xl border-2 text-left transition-all flex items-center justify-between",
                       selectedTemplate === template.id 
-                        ? "border-blue-600 bg-blue-50/50" 
-                        : "border-slate-100 hover:border-slate-200"
+                        ? "border-primary bg-primary/5" 
+                        : "border-border hover:border-muted-foreground/30"
                     )}
                   >
                     <div className="flex items-center gap-3">
                       <div className={cn("w-8 h-8 rounded-lg", template.color)} />
-                      <span className="font-medium text-sm">{template.name}</span>
+                      <span className="font-medium text-sm text-foreground">{template.name}</span>
                     </div>
-                    {selectedTemplate === template.id && <Check className="w-4 h-4 text-blue-600" />}
+                    {selectedTemplate === template.id && <Check className="w-4 h-4 text-primary" />}
                   </button>
                 ))}
               </CardContent>
             </Card>
 
-            <Card className="border-none shadow-sm">
+            <Card className="border-none shadow-sm bg-card">
               <CardHeader>
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <Settings2 className="w-5 h-5 text-blue-600" /> Customization
+                <CardTitle className="text-lg flex items-center gap-2 text-foreground">
+                  <Settings2 className="w-5 h-5 text-primary" /> Customization
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-3">
-                  <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Sections to Include</p>
+                  <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">Sections to Include</p>
                   {Object.entries(sections).map(([key, value]) => (
                     <div key={key} className="flex items-center justify-between">
-                      <span className="text-sm text-slate-600 capitalize">{key === 'certs' ? 'Certifications' : key}</span>
+                      <span className="text-sm text-foreground/80 capitalize">{key === 'certs' ? 'Certifications' : key}</span>
                       <Button 
                         variant="ghost" 
                         size="sm" 
                         onClick={() => setSections(prev => ({ ...prev, [key]: !value }))}
-                        className={cn("h-8 w-8 p-0 rounded-full", value ? "bg-blue-600 text-white" : "bg-slate-100 text-slate-400")}
+                        className={cn("h-8 w-8 p-0 rounded-full", value ? "bg-primary text-primary-foreground" : "bg-muted text-muted-foreground")}
                       >
                         <Check className="w-4 h-4" />
                       </Button>
@@ -171,7 +171,7 @@ const ResumeBuilder = () => {
 
           <div className="lg:col-span-2">
             <Card className={cn(
-              "border-none shadow-xl min-h-[800px] bg-white overflow-hidden transition-all duration-500",
+              "border-none shadow-xl min-h-[800px] bg-white text-slate-900 overflow-hidden transition-all duration-500",
               selectedTemplate === 'minimal' && "font-serif",
               selectedTemplate === 'creative' && "bg-slate-50"
             )}>
@@ -182,7 +182,7 @@ const ResumeBuilder = () => {
                 selectedTemplate === 'creative' && "border-t-8 border-indigo-600"
               )}>
                 {/* Header */}
-                <div className="flex justify-between items-start border-b pb-8">
+                <div className="flex justify-between items-start border-b border-slate-200 pb-8">
                   <div className="space-y-2">
                     <h2 className="text-4xl font-bold text-slate-900">
                       {profile?.firstName} {profile?.lastName}
@@ -204,7 +204,7 @@ const ResumeBuilder = () => {
                 {/* Bio */}
                 {sections.bio && (
                   <section className="space-y-3">
-                    <h3 className="text-sm font-bold text-slate-900 uppercase tracking-widest border-b pb-1">Professional Summary</h3>
+                    <h3 className="text-sm font-bold text-slate-900 uppercase tracking-widest border-b border-slate-200 pb-1">Professional Summary</h3>
                     <p className="text-slate-600 leading-relaxed">
                       {profile?.bio || "Passionate student dedicated to technical excellence and continuous learning."}
                     </p>
@@ -214,7 +214,7 @@ const ResumeBuilder = () => {
                 {/* Skills */}
                 {sections.skills && (
                   <section className="space-y-3">
-                    <h3 className="text-sm font-bold text-slate-900 uppercase tracking-widest border-b pb-1">Technical Skills</h3>
+                    <h3 className="text-sm font-bold text-slate-900 uppercase tracking-widest border-b border-slate-200 pb-1">Technical Skills</h3>
                     <div className="flex flex-wrap gap-2">
                       {skills.length > 0 ? skills.map((skill: any) => (
                         <Badge key={skill.id} variant="outline" className="rounded-md border-slate-200 text-slate-700 bg-slate-50/50">
@@ -228,7 +228,7 @@ const ResumeBuilder = () => {
                 {/* Projects */}
                 {sections.projects && (
                   <section className="space-y-6">
-                    <h3 className="text-sm font-bold text-slate-900 uppercase tracking-widest border-b pb-1">Featured Projects</h3>
+                    <h3 className="text-sm font-bold text-slate-900 uppercase tracking-widest border-b border-slate-200 pb-1">Featured Projects</h3>
                     <div className="space-y-6">
                       {projects.length > 0 ? projects.map((project: any) => (
                         <div key={project.id} className="space-y-1">
@@ -247,7 +247,7 @@ const ResumeBuilder = () => {
                 {/* Certifications */}
                 {sections.certs && (
                   <section className="space-y-4">
-                    <h3 className="text-sm font-bold text-slate-900 uppercase tracking-widest border-b pb-1">Certifications</h3>
+                    <h3 className="text-sm font-bold text-slate-900 uppercase tracking-widest border-b border-slate-200 pb-1">Certifications</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       {certs.length > 0 ? certs.map((cert: any) => (
                         <div key={cert.id} className="flex items-start gap-3">

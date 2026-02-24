@@ -117,14 +117,14 @@ const Certifications = () => {
       <div className="space-y-8">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900">Certifications</h1>
-            <p className="text-slate-500">Official credentials that validate your professional expertise.</p>
+            <h1 className="text-3xl font-bold text-foreground">Certifications</h1>
+            <p className="text-muted-foreground">Official credentials that validate your professional expertise.</p>
           </div>
           <Button 
             onClick={() => setIsAdding(!isAdding)} 
             className={cn(
-              "transition-all",
-              isAdding ? "bg-slate-200 text-slate-900 hover:bg-slate-300" : "bg-emerald-600 hover:bg-emerald-700"
+              "transition-all shadow-lg",
+              isAdding ? "bg-secondary text-secondary-foreground hover:bg-secondary/80" : "bg-emerald-600 hover:bg-emerald-700 text-white"
             )}
           >
             {isAdding ? <><X className="w-4 h-4 mr-2" /> Cancel</> : <><Plus className="w-4 h-4 mr-2" /> Add Certification</>}
@@ -132,16 +132,16 @@ const Certifications = () => {
         </div>
 
         {isAdding && (
-          <Card className="border-none shadow-xl animate-in fade-in slide-in-from-top-4 duration-300">
+          <Card className="border-none shadow-xl animate-in fade-in slide-in-from-top-4 duration-300 bg-card">
             <CardHeader>
-              <CardTitle>Credential Details</CardTitle>
+              <CardTitle className="text-foreground">Credential Details</CardTitle>
               <CardDescription>Enter the details of your earned certification.</CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleAddCert} className="space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <Label>Certification Name</Label>
+                    <Label className="text-foreground">Certification Name</Label>
                     <Input 
                       required 
                       placeholder="e.g. Google Data Analytics"
@@ -150,7 +150,7 @@ const Certifications = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Issuing Organization</Label>
+                    <Label className="text-foreground">Issuing Organization</Label>
                     <Input 
                       required 
                       placeholder="e.g. Google, Microsoft, AWS"
@@ -161,7 +161,7 @@ const Certifications = () => {
                 </div>
                 <div className="grid md:grid-cols-2 gap-6">
                   <div className="space-y-2">
-                    <Label>Issue Date</Label>
+                    <Label className="text-foreground">Issue Date</Label>
                     <Input 
                       type="date" 
                       required 
@@ -170,7 +170,7 @@ const Certifications = () => {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label>Credential URL (Verification Link)</Label>
+                    <Label className="text-foreground">Credential URL (Verification Link)</Label>
                     <Input 
                       type="url" 
                       placeholder="https://verify.com/id"
@@ -179,7 +179,7 @@ const Certifications = () => {
                     />
                   </div>
                 </div>
-                <Button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700 h-12 text-lg">
+                <Button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700 text-white h-12 text-lg shadow-lg">
                   Verify & Save Certification
                 </Button>
               </form>
@@ -194,22 +194,22 @@ const Certifications = () => {
         ) : (
           <div className="space-y-4">
             {certs.length > 0 ? certs.map((cert) => (
-              <Card key={cert.id} className="border-none shadow-sm hover:shadow-md transition-all group overflow-hidden">
+              <Card key={cert.id} className="border-none shadow-sm hover:shadow-md transition-all group overflow-hidden bg-card">
                 <CardContent className="p-0">
                   <div className="flex flex-col md:flex-row items-stretch">
                     <div className="w-2 bg-emerald-500" />
                     <div className="flex-1 p-6 flex flex-col md:flex-row md:items-center justify-between gap-6">
                       <div className="flex items-center gap-6">
-                        <div className="w-16 h-16 bg-emerald-50 rounded-2xl flex items-center justify-center shrink-0">
-                          <Award className="w-8 h-8 text-emerald-600" />
+                        <div className="w-16 h-16 bg-emerald-500/10 rounded-2xl flex items-center justify-center shrink-0">
+                          <Award className="w-8 h-8 text-emerald-500" />
                         </div>
                         <div className="space-y-1">
                           <div className="flex items-center gap-2">
-                            <h3 className="text-xl font-bold text-slate-900">{cert.name}</h3>
+                            <h3 className="text-xl font-bold text-foreground">{cert.name}</h3>
                             <CheckCircle2 className="w-4 h-4 text-emerald-500" />
                           </div>
-                          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-slate-500">
-                            <span className="flex items-center gap-1.5 font-medium text-slate-700">
+                          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
+                            <span className="flex items-center gap-1.5 font-medium text-foreground/80">
                               <Building2 className="w-4 h-4" /> {cert.issuer}
                             </span>
                             <span className="flex items-center gap-1.5">
@@ -221,7 +221,7 @@ const Certifications = () => {
                       
                       <div className="flex items-center gap-3">
                         {cert.link && (
-                          <Button variant="outline" className="gap-2 border-slate-200 hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-200 transition-all" asChild>
+                          <Button variant="outline" className="gap-2 border-border hover:bg-emerald-500/10 hover:text-emerald-500 hover:border-emerald-500/20 transition-all" asChild>
                             <a href={`https://${cert.link}`} target="_blank" rel="noopener noreferrer">
                               <ExternalLink className="w-4 h-4" /> View Certificate
                             </a>
@@ -230,7 +230,7 @@ const Certifications = () => {
                         <Button 
                           variant="ghost" 
                           size="icon" 
-                          className="text-slate-300 hover:text-red-600 hover:bg-red-50 transition-colors"
+                          className="text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
                           onClick={() => removeCert(cert.id)}
                         >
                           <Trash2 className="w-4 h-4" />
@@ -241,12 +241,12 @@ const Certifications = () => {
                 </CardContent>
               </Card>
             )) : (
-              <div className="text-center py-20 bg-white rounded-3xl border-2 border-dashed border-slate-200">
-                <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <ShieldCheck className="w-10 h-10 text-slate-300" />
+              <div className="text-center py-20 bg-card rounded-3xl border-2 border-dashed border-border">
+                <div className="w-20 h-20 bg-muted rounded-full flex items-center justify-center mx-auto mb-6">
+                  <ShieldCheck className="w-10 h-10 text-muted-foreground/30" />
                 </div>
-                <h3 className="text-xl font-bold text-slate-900">No certifications yet</h3>
-                <p className="text-slate-500 mt-2 max-w-xs mx-auto">
+                <h3 className="text-xl font-bold text-foreground">No certifications yet</h3>
+                <p className="text-muted-foreground mt-2 max-w-xs mx-auto">
                   Add your professional certifications to build trust with recruiters.
                 </p>
                 <Button 

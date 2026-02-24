@@ -43,11 +43,11 @@ const Applications = () => {
 
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
-      case 'interviewing': return 'bg-blue-100 text-blue-700';
-      case 'pending': return 'bg-amber-100 text-amber-700';
-      case 'rejected': return 'bg-red-100 text-red-700';
-      case 'accepted': return 'bg-emerald-100 text-emerald-700';
-      default: return 'bg-slate-100 text-slate-700';
+      case 'interviewing': return 'bg-blue-500/10 text-blue-500';
+      case 'pending': return 'bg-amber-500/10 text-amber-500';
+      case 'rejected': return 'bg-destructive/10 text-destructive';
+      case 'accepted': return 'bg-emerald-500/10 text-emerald-500';
+      default: return 'bg-muted text-muted-foreground';
     }
   };
 
@@ -55,27 +55,27 @@ const Applications = () => {
     <DashboardLayout role="student">
       <div className="space-y-8">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">My Applications</h1>
-          <p className="text-slate-500">Track the status of your job and internship applications.</p>
+          <h1 className="text-3xl font-bold text-foreground">My Applications</h1>
+          <p className="text-muted-foreground">Track the status of your job and internship applications.</p>
         </div>
 
         {loading ? (
           <div className="flex justify-center py-20">
-            <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+            <Loader2 className="w-8 h-8 animate-spin text-primary" />
           </div>
         ) : (
           <div className="grid gap-4">
             {applications.length > 0 ? applications.map((app) => (
-              <Card key={app.id} className="border-none shadow-sm hover:shadow-md transition-all cursor-pointer group">
+              <Card key={app.id} className="border-none shadow-sm hover:shadow-md transition-all cursor-pointer group bg-card">
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center">
-                        <Building2 className="w-6 h-6 text-slate-400" />
+                      <div className="w-12 h-12 bg-muted rounded-xl flex items-center justify-center">
+                        <Building2 className="w-6 h-6 text-muted-foreground" />
                       </div>
                       <div>
-                        <h3 className="font-bold text-slate-900 group-hover:text-blue-600 transition-colors">{app.jobTitle}</h3>
-                        <div className="flex items-center gap-4 mt-1 text-sm text-slate-500">
+                        <h3 className="font-bold text-foreground group-hover:text-primary transition-colors">{app.jobTitle}</h3>
+                        <div className="flex items-center gap-4 mt-1 text-sm text-muted-foreground">
                           <span className="flex items-center gap-1"><Building2 className="w-3.5 h-3.5" /> {app.companyName}</span>
                           <span className="flex items-center gap-1">
                             <Calendar className="w-3.5 h-3.5" /> 
@@ -88,14 +88,14 @@ const Applications = () => {
                       <Badge className={cn("font-medium px-3 py-1 border-none", getStatusColor(app.status))}>
                         {app.status}
                       </Badge>
-                      <ChevronRight className="w-5 h-5 text-slate-300 group-hover:text-slate-600 transition-colors" />
+                      <ChevronRight className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" />
                     </div>
                   </div>
                 </CardContent>
               </Card>
             )) : (
-              <div className="text-center py-20 bg-white rounded-2xl border border-dashed">
-                <p className="text-slate-500">You haven't applied for any jobs yet.</p>
+              <div className="text-center py-20 bg-card rounded-2xl border border-dashed border-border">
+                <p className="text-muted-foreground">You haven't applied for any jobs yet.</p>
               </div>
             )}
           </div>

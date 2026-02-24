@@ -170,7 +170,7 @@ const Profile = () => {
               <div className="bg-primary p-1.5 rounded-lg">
                 <ShieldCheck className="text-primary-foreground w-5 h-5" />
               </div>
-              <span className="font-bold">
+              <span className="font-bold text-foreground">
                 {authRole === 'recruiter' ? 'Student Portfolio' : 'Portfolio Preview'}
               </span>
             </div>
@@ -188,7 +188,7 @@ const Profile = () => {
               </AvatarFallback>
             </Avatar>
             <div className="space-y-4">
-              <h2 className="text-6xl font-extrabold tracking-tight">
+              <h2 className="text-6xl font-extrabold tracking-tight text-foreground">
                 {profile.firstName} {profile.lastName}
               </h2>
               <div className="flex items-center justify-center gap-6 text-muted-foreground text-lg">
@@ -213,7 +213,7 @@ const Profile = () => {
           <div className="grid lg:grid-cols-3 gap-16">
             <div className="lg:col-span-2 space-y-16">
               <section className="space-y-6">
-                <h3 className="text-3xl font-bold flex items-center gap-3">
+                <h3 className="text-3xl font-bold flex items-center gap-3 text-foreground">
                   <User className="w-8 h-8 text-primary" /> About Me
                 </h3>
                 <p className="text-2xl text-muted-foreground leading-relaxed font-light">
@@ -222,13 +222,13 @@ const Profile = () => {
               </section>
 
               <section className="space-y-8">
-                <h3 className="text-3xl font-bold flex items-center gap-3">
+                <h3 className="text-3xl font-bold flex items-center gap-3 text-foreground">
                   <Code2 className="w-8 h-8 text-primary" /> Technical Expertise
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {portfolioData.skills.length > 0 ? portfolioData.skills.map((skill, i) => (
                     <div key={i} className="p-6 bg-card rounded-2xl flex items-center justify-between hover:bg-primary/5 transition-colors group border border-border">
-                      <span className="text-xl font-bold">{skill.name}</span>
+                      <span className="text-xl font-bold text-foreground">{skill.name}</span>
                       <Badge className="bg-primary text-primary-foreground border-none px-3 py-1">
                         {skill.level}
                       </Badge>
@@ -240,14 +240,14 @@ const Profile = () => {
 
             <div className="space-y-16">
               <section className="space-y-8">
-                <h3 className="text-3xl font-bold flex items-center gap-3">
+                <h3 className="text-3xl font-bold flex items-center gap-3 text-foreground">
                   <Briefcase className="w-8 h-8 text-primary" /> Projects
                 </h3>
                 <div className="space-y-6">
                   {portfolioData.projects.length > 0 ? portfolioData.projects.map((project, i) => (
                     <Card key={i} className="border border-border shadow-lg hover:shadow-xl transition-all group overflow-hidden bg-card">
                       <CardContent className="p-6 space-y-4">
-                        <h4 className="text-xl font-bold group-hover:text-primary transition-colors">{project.title}</h4>
+                        <h4 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">{project.title}</h4>
                         <p className="text-muted-foreground leading-relaxed">{project.description}</p>
                         <div className="flex flex-wrap gap-2">
                           {project.tags && typeof project.tags === 'string' ? project.tags.split(',').map((tag: string) => (
@@ -287,7 +287,7 @@ const Profile = () => {
       <div className="max-w-5xl mx-auto space-y-8">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold">
+            <h1 className="text-3xl font-bold text-foreground">
               {isEditing ? "Edit Profile" : "My Professional Profile"}
             </h1>
             <p className="text-muted-foreground">
@@ -329,7 +329,7 @@ const Profile = () => {
             <div className="md:col-span-2 space-y-6">
               <Card className="border-none shadow-sm bg-card">
                 <CardHeader>
-                  <CardTitle className="text-lg">Basic Information</CardTitle>
+                  <CardTitle className="text-lg text-foreground">Basic Information</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
@@ -368,7 +368,7 @@ const Profile = () => {
 
               <Card className="border-none shadow-sm bg-card">
                 <CardHeader>
-                  <CardTitle className="text-lg">Professional Bio</CardTitle>
+                  <CardTitle className="text-lg text-foreground">Professional Bio</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <Textarea 
@@ -384,7 +384,7 @@ const Profile = () => {
             <div className="space-y-6">
               <Card className="border-none shadow-sm bg-card">
                 <CardHeader>
-                  <CardTitle className="text-lg">Social Links</CardTitle>
+                  <CardTitle className="text-lg text-foreground">Social Links</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
@@ -429,7 +429,7 @@ const Profile = () => {
                     </Avatar>
                     <div className="flex-1 pb-2">
                       <div className="flex items-center gap-2">
-                        <h2 className="text-3xl font-bold">
+                        <h2 className="text-3xl font-bold text-foreground">
                           {profile.firstName} {profile.lastName}
                         </h2>
                         <ShieldCheck className="w-6 h-6 text-primary" />
@@ -445,7 +445,7 @@ const Profile = () => {
 
               <Card className="border-none shadow-sm bg-card">
                 <CardHeader>
-                  <CardTitle className="text-xl">About Me</CardTitle>
+                  <CardTitle className="text-xl text-foreground">About Me</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground leading-relaxed text-lg">
@@ -458,13 +458,13 @@ const Profile = () => {
             <div className="space-y-6">
               <Card className="border-none shadow-sm bg-card">
                 <CardHeader>
-                  <CardTitle className="text-lg">Connect</CardTitle>
+                  <CardTitle className="text-lg text-foreground">Connect</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   {profile.github && (
                     <a href={`https://${profile.github}`} target="_blank" rel="noreferrer" className="flex items-center gap-3 p-3 rounded-xl bg-muted hover:bg-muted/80 transition-colors group">
                       <Github className="w-5 h-5 text-foreground" />
-                      <span className="text-sm font-medium group-hover:text-primary">GitHub</span>
+                      <span className="text-sm font-medium text-foreground group-hover:text-primary">GitHub</span>
                       <ExternalLink className="w-3 h-3 ml-auto text-muted-foreground" />
                     </a>
                   )}
