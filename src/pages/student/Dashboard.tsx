@@ -31,7 +31,6 @@ const StudentDashboard = () => {
 
   const fetchDashboardData = async () => {
     try {
-      // Fetch user details by ID
       const profileData = await api.get(`/users/${user.id}`);
       const [skills, projects, certs] = await Promise.all([
         api.get('/skills'),
@@ -44,11 +43,10 @@ const StudentDashboard = () => {
         skills: skills?.length || 0,
         projects: projects?.length || 0,
         certs: certs?.length || 0,
-        views: 142 // Placeholder for now
+        views: 142
       });
     } catch (error) {
       console.error("Error fetching dashboard data:", error);
-      // Fallback to auth user if API fails
       setProfile(user);
     } finally {
       setLoading(false);
@@ -59,7 +57,7 @@ const StudentDashboard = () => {
     return (
       <DashboardLayout role="student">
         <div className="flex justify-center py-20">
-          <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
         </div>
       </DashboardLayout>
     );
@@ -68,20 +66,20 @@ const StudentDashboard = () => {
   const displayName = profile?.firstName || user?.firstName || 'Student';
 
   const statCards = [
-    { label: 'Skills Added', value: stats.skills, icon: Code2, color: 'text-blue-600', bg: 'bg-blue-100' },
-    { label: 'Projects', value: stats.projects, icon: FolderRoot, color: 'text-indigo-600', bg: 'bg-indigo-100' },
-    { label: 'Certifications', value: stats.certs, icon: Award, color: 'text-emerald-600', bg: 'bg-emerald-100' },
-    { label: 'Profile Views', value: stats.views, icon: TrendingUp, color: 'text-orange-600', bg: 'bg-orange-100' },
+    { label: 'Skills Added', value: stats.skills, icon: Code2, color: 'text-blue-500', bg: 'bg-blue-500/10' },
+    { label: 'Projects', value: stats.projects, icon: FolderRoot, color: 'text-indigo-500', bg: 'bg-indigo-500/10' },
+    { label: 'Certifications', value: stats.certs, icon: Award, color: 'text-emerald-500', bg: 'bg-emerald-500/10' },
+    { label: 'Profile Views', value: stats.views, icon: TrendingUp, color: 'text-orange-500', bg: 'bg-orange-500/10' },
   ];
 
   return (
     <DashboardLayout role="student">
       <div className="space-y-8">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">
+          <h1 className="text-3xl font-bold">
             Welcome back, {displayName}!
           </h1>
-          <p className="text-slate-500">Here's what's happening with your portfolio.</p>
+          <p className="text-muted-foreground">Here's what's happening with your portfolio.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -92,8 +90,8 @@ const StudentDashboard = () => {
                   <stat.icon className={cn("w-6 h-6", stat.color)} />
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-slate-500">{stat.label}</p>
-                  <p className="text-2xl font-bold text-slate-900">{stat.value}</p>
+                  <p className="text-sm font-medium text-muted-foreground">{stat.label}</p>
+                  <p className="text-2xl font-bold">{stat.value}</p>
                 </div>
               </CardContent>
             </Card>
@@ -108,8 +106,8 @@ const StudentDashboard = () => {
             <CardContent className="space-y-6">
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span className="text-slate-600 font-medium">Overall Progress</span>
-                  <span className="text-blue-600 font-bold">85%</span>
+                  <span className="text-muted-foreground font-medium">Overall Progress</span>
+                  <span className="text-primary font-bold">85%</span>
                 </div>
                 <Progress value={85} className="h-2" />
               </div>
@@ -121,14 +119,14 @@ const StudentDashboard = () => {
                   { task: 'Verify email address', done: true },
                   { task: 'Add social links', done: !!profile?.github || !!profile?.linkedin },
                 ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-3 p-3 rounded-lg border bg-slate-50/50">
+                  <div key={i} className="flex items-center gap-3 p-3 rounded-lg border border-border bg-accent/50">
                     <div className={cn(
                       "w-5 h-5 rounded-full border flex items-center justify-center",
-                      item.done ? "bg-blue-600 border-blue-600" : "bg-white border-slate-300"
+                      item.done ? "bg-primary border-primary" : "bg-background border-muted-foreground/30"
                     )}>
-                      {item.done && <div className="w-2 h-2 bg-white rounded-full" />}
+                      {item.done && <div className="w-2 h-2 bg-primary-foreground rounded-full" />}
                     </div>
-                    <span className={cn("text-sm", item.done ? "text-slate-900" : "text-slate-500")}>
+                    <span className={cn("text-sm", item.done ? "text-foreground" : "text-muted-foreground")}>
                       {item.task}
                     </span>
                   </div>
@@ -144,10 +142,10 @@ const StudentDashboard = () => {
             <CardContent>
               <div className="space-y-6">
                 <div className="flex gap-4">
-                  <div className="w-1 bg-blue-100 rounded-full" />
+                  <div className="w-1 bg-primary/20 rounded-full" />
                   <div>
-                    <p className="text-sm font-medium text-slate-900">Profile last updated</p>
-                    <p className="text-xs text-slate-500">Just now</p>
+                    <p className="text-sm font-medium">Profile last updated</p>
+                    <p className="text-xs text-muted-foreground">Just now</p>
                   </div>
                 </div>
               </div>
