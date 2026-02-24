@@ -98,14 +98,14 @@ const RecruiterDashboard = () => {
       <div className="space-y-8">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900">Talent Search</h1>
-            <p className="text-slate-500">
+            <h1 className="text-3xl font-bold text-foreground">Talent Search</h1>
+            <p className="text-muted-foreground">
               {isDemo ? "Viewing demo candidates (Demo Mode)" : "Find real candidates registered on the platform."}
             </p>
           </div>
           <div className="flex items-center gap-2">
             <div className="relative flex-1 md:w-80">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input 
                 placeholder="Search by name or bio..." 
                 className="pl-10"
@@ -121,7 +121,7 @@ const RecruiterDashboard = () => {
 
         {loading ? (
           <div className="flex justify-center py-20">
-            <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+            <Loader2 className="w-8 h-8 animate-spin text-primary" />
           </div>
         ) : (
           <div className="grid gap-6">
@@ -130,9 +130,9 @@ const RecruiterDashboard = () => {
                 <Card key={student.id} className="border-none shadow-sm hover:shadow-md transition-shadow group">
                   <CardContent className="p-6">
                     <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
-                      <Avatar className="w-16 h-16 border group-hover:border-blue-200 transition-colors">
+                      <Avatar className="w-16 h-16 border group-hover:border-primary/50 transition-colors">
                         <AvatarImage src={student.avatarUrl} />
-                        <AvatarFallback className="bg-blue-100 text-blue-600">
+                        <AvatarFallback className="bg-primary/10 text-primary">
                           {student.firstName?.[0]}{student.lastName?.[0]}
                         </AvatarFallback>
                       </Avatar>
@@ -140,17 +140,17 @@ const RecruiterDashboard = () => {
                       <div className="flex-1 space-y-2">
                         <div className="flex items-center justify-between">
                           <div>
-                            <h3 className="text-xl font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
+                            <h3 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
                               {student.firstName} {student.lastName}
                             </h3>
-                            <p className="text-blue-600 font-medium text-sm">Student</p>
+                            <p className="text-primary font-medium text-sm">Student</p>
                           </div>
                           <div className="flex items-center gap-2">
                             <Button 
                               variant="ghost" 
                               size="icon" 
                               onClick={() => toggleSave(student.id, student.firstName)}
-                              className={savedIds.includes(student.id) ? "text-blue-600" : "text-slate-400"}
+                              className={savedIds.includes(student.id) ? "text-primary" : "text-muted-foreground"}
                             >
                               {savedIds.includes(student.id) ? <BookmarkCheck className="w-5 h-5" /> : <Bookmark className="w-5 h-5" />}
                             </Button>
@@ -162,7 +162,7 @@ const RecruiterDashboard = () => {
                             <Button 
                               variant="default" 
                               size="sm" 
-                              className="bg-blue-600 hover:bg-blue-700"
+                              className="bg-primary hover:bg-primary/90 text-primary-foreground"
                               onClick={() => handleContact(student.email)}
                             >
                               <Mail className="w-4 h-4 mr-2" /> Contact
@@ -170,9 +170,9 @@ const RecruiterDashboard = () => {
                           </div>
                         </div>
                         
-                        <div className="flex flex-wrap items-center gap-4 text-sm text-slate-500">
+                        <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
                           <span className="flex items-center gap-1"><MapPin className="w-4 h-4" /> {student.location || 'Remote'}</span>
-                          <p className="text-slate-600 line-clamp-1">{student.bio || 'No bio provided yet.'}</p>
+                          <p className="text-foreground/80 line-clamp-1">{student.bio || 'No bio provided yet.'}</p>
                         </div>
                       </div>
                     </div>
@@ -180,8 +180,8 @@ const RecruiterDashboard = () => {
                 </Card>
               ))
             ) : (
-              <div className="text-center py-20 bg-white rounded-2xl border border-dashed">
-                <p className="text-slate-500">No candidates found matching your search.</p>
+              <div className="text-center py-20 bg-card rounded-2xl border border-dashed">
+                <p className="text-muted-foreground">No candidates found matching your search.</p>
               </div>
             )}
           </div>

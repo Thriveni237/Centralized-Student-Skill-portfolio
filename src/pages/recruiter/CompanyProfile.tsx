@@ -56,10 +56,10 @@ const CompanyProfile = () => {
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900">
+            <h1 className="text-3xl font-bold text-foreground">
               {isEditing ? "Edit Company Profile" : "Company Presence"}
             </h1>
-            <p className="text-slate-500">
+            <p className="text-muted-foreground">
               {isEditing ? "Update your company details and culture." : "This is how your company appears to students."}
             </p>
           </div>
@@ -67,7 +67,7 @@ const CompanyProfile = () => {
             {!isEditing ? (
               <Button 
                 onClick={() => setIsEditing(true)} 
-                className="bg-blue-600 hover:bg-blue-700 gap-2 shadow-lg shadow-blue-200"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground gap-2 shadow-lg"
               >
                 <Edit3 className="w-4 h-4" /> Edit Profile
               </Button>
@@ -78,7 +78,7 @@ const CompanyProfile = () => {
                 </Button>
                 <Button 
                   onClick={handleSave} 
-                  className="bg-emerald-600 hover:bg-emerald-700 gap-2 shadow-lg shadow-emerald-200"
+                  className="bg-emerald-600 hover:bg-emerald-700 text-white gap-2 shadow-lg"
                   disabled={isLoading}
                 >
                   {isLoading ? "Saving..." : <><CheckCircle2 className="w-4 h-4" /> Save Changes</>}
@@ -154,9 +154,9 @@ const CompanyProfile = () => {
                 <CardContent className="space-y-4">
                   <div className="flex flex-wrap gap-2">
                     {company.perks.map(perk => (
-                      <Badge key={perk} variant="secondary" className="gap-2 px-3 py-1.5 bg-blue-50 text-blue-700 border-none">
+                      <Badge key={perk} variant="secondary" className="gap-2 px-3 py-1.5 bg-primary/10 text-primary border-none">
                         {perk}
-                        <button type="button" onClick={() => setCompany({...company, perks: company.perks.filter(p => p !== perk)})} className="hover:text-red-600">
+                        <button type="button" onClick={() => setCompany({...company, perks: company.perks.filter(p => p !== perk)})} className="hover:text-destructive">
                           <X className="w-3 h-3" />
                         </button>
                       </Badge>
@@ -176,18 +176,18 @@ const CompanyProfile = () => {
                 </CardHeader>
                 <CardContent className="flex flex-col items-center py-6">
                   <div className="relative group">
-                    <div className="w-32 h-32 rounded-3xl border-2 border-dashed border-slate-200 flex items-center justify-center bg-slate-50 overflow-hidden">
+                    <div className="w-32 h-32 rounded-3xl border-2 border-dashed border-border flex items-center justify-center bg-muted overflow-hidden">
                       {company.logo ? (
                         <img src={company.logo} alt="Logo" className="w-full h-full object-cover" />
                       ) : (
-                        <Building2 className="w-12 h-12 text-slate-300" />
+                        <Building2 className="w-12 h-12 text-muted-foreground" />
                       )}
                     </div>
-                    <button className="absolute -bottom-2 -right-2 p-2 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-colors">
+                    <button className="absolute -bottom-2 -right-2 p-2 bg-primary text-primary-foreground rounded-full shadow-lg hover:bg-primary/90 transition-colors">
                       <Camera className="w-4 h-4" />
                     </button>
                   </div>
-                  <p className="mt-4 text-xs text-slate-500 text-center">
+                  <p className="mt-4 text-xs text-muted-foreground text-center">
                     Upload your company logo. Recommended: 400x400px.
                   </p>
                 </CardContent>
@@ -198,19 +198,19 @@ const CompanyProfile = () => {
           /* View Mode */
           <div className="space-y-8 animate-in fade-in duration-500">
             {/* Hero Card */}
-            <Card className="border-none shadow-xl overflow-hidden bg-white">
-              <div className="h-32 bg-gradient-to-r from-blue-600 to-indigo-700" />
+            <Card className="border-none shadow-xl overflow-hidden bg-card">
+              <div className="h-32 bg-gradient-to-r from-primary to-indigo-700" />
               <CardContent className="relative pt-0 pb-8 px-8">
                 <div className="flex flex-col md:flex-row items-end gap-6 -mt-12">
-                  <div className="w-32 h-32 rounded-3xl border-4 border-white bg-white shadow-lg overflow-hidden flex items-center justify-center">
+                  <div className="w-32 h-32 rounded-3xl border-4 border-card bg-card shadow-lg overflow-hidden flex items-center justify-center">
                     <img src={company.logo} alt={company.name} className="w-full h-full object-cover" />
                   </div>
                   <div className="flex-1 pb-2">
                     <div className="flex items-center gap-3">
-                      <h2 className="text-3xl font-bold text-slate-900">{company.name}</h2>
-                      <Badge className="bg-blue-100 text-blue-700 border-none">Verified Partner</Badge>
+                      <h2 className="text-3xl font-bold text-foreground">{company.name}</h2>
+                      <Badge className="bg-primary/10 text-primary border-none">Verified Partner</Badge>
                     </div>
-                    <div className="flex flex-wrap items-center gap-4 mt-2 text-slate-500 font-medium">
+                    <div className="flex flex-wrap items-center gap-4 mt-2 text-muted-foreground font-medium">
                       <span className="flex items-center gap-1.5"><Globe className="w-4 h-4" /> {company.website}</span>
                       <span className="flex items-center gap-1.5"><MapPin className="w-4 h-4" /> {company.location}</span>
                     </div>
@@ -227,25 +227,25 @@ const CompanyProfile = () => {
             <div className="grid lg:grid-cols-3 gap-8">
               <div className="lg:col-span-2 space-y-8">
                 <section className="space-y-4">
-                  <h3 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-                    <Building2 className="w-5 h-5 text-blue-600" /> About the Company
+                  <h3 className="text-xl font-bold text-foreground flex items-center gap-2">
+                    <Building2 className="w-5 h-5 text-primary" /> About the Company
                   </h3>
-                  <p className="text-slate-600 leading-relaxed text-lg">
+                  <p className="text-foreground/80 leading-relaxed text-lg">
                     {company.description}
                   </p>
                 </section>
 
                 <section className="space-y-4">
-                  <h3 className="text-xl font-bold text-slate-900 flex items-center gap-2">
-                    <Heart className="w-5 h-5 text-rose-500" /> Culture & Benefits
+                  <h3 className="text-xl font-bold text-foreground flex items-center gap-2">
+                    <Heart className="w-5 h-5 text-destructive" /> Culture & Benefits
                   </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {company.perks.map((perk, i) => (
-                      <div key={i} className="flex items-center gap-3 p-4 rounded-2xl bg-slate-50 border border-slate-100">
-                        <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm">
+                      <div key={i} className="flex items-center gap-3 p-4 rounded-2xl bg-muted border border-border">
+                        <div className="w-8 h-8 rounded-full bg-card flex items-center justify-center shadow-sm">
                           <CheckCircle2 className="w-4 h-4 text-emerald-500" />
                         </div>
-                        <span className="font-medium text-slate-700">{perk}</span>
+                        <span className="font-medium text-foreground/90">{perk}</span>
                       </div>
                     ))}
                   </div>
@@ -253,39 +253,39 @@ const CompanyProfile = () => {
               </div>
 
               <div className="space-y-6">
-                <Card className="border-none shadow-sm bg-slate-900 text-white">
+                <Card className="border-none shadow-sm bg-secondary text-secondary-foreground">
                   <CardHeader>
                     <CardTitle className="text-lg">Company Stats</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-6">
                     <div className="flex items-center gap-4">
-                      <div className="p-2 bg-white/10 rounded-lg">
-                        <Users className="w-5 h-5 text-blue-400" />
+                      <div className="p-2 bg-background/50 rounded-lg">
+                        <Users className="w-5 h-5 text-primary" />
                       </div>
                       <div>
-                        <p className="text-xs text-slate-400 uppercase tracking-wider">Company Size</p>
+                        <p className="text-xs text-muted-foreground uppercase tracking-wider">Company Size</p>
                         <p className="font-bold">{company.size}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-4">
-                      <div className="p-2 bg-white/10 rounded-lg">
-                        <Briefcase className="w-5 h-5 text-emerald-400" />
+                      <div className="p-2 bg-background/50 rounded-lg">
+                        <Briefcase className="w-5 h-5 text-emerald-500" />
                       </div>
                       <div>
-                        <p className="text-xs text-slate-400 uppercase tracking-wider">Industry</p>
+                        <p className="text-xs text-muted-foreground uppercase tracking-wider">Industry</p>
                         <p className="font-bold">{company.industry}</p>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
 
-                <Card className="border-none shadow-sm bg-blue-50 border border-blue-100">
+                <Card className="border-none shadow-sm bg-primary/5 border border-primary/10">
                   <CardContent className="p-6 space-y-4">
-                    <h4 className="font-bold text-blue-900">Hiring Status</h4>
-                    <p className="text-sm text-blue-700">
+                    <h4 className="font-bold text-primary">Hiring Status</h4>
+                    <p className="text-sm text-muted-foreground">
                       You currently have 5 active job postings. Students are actively viewing your profile.
                     </p>
-                    <Button className="w-full bg-blue-600 hover:bg-blue-700">
+                    <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
                       Manage Jobs
                     </Button>
                   </CardContent>
