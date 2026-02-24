@@ -55,7 +55,8 @@ const Profile = () => {
     github: '',
     linkedin: '',
     website: '',
-    email: ''
+    email: '',
+    views: 0
   });
 
   const [portfolioData, setPortfolioData] = useState({
@@ -82,10 +83,13 @@ const Profile = () => {
           github: 'github.com/alexj',
           linkedin: 'linkedin.com/in/alexj',
           website: 'alexj.dev',
-          email: authUser?.email || 'alex@demo.com'
+          email: authUser?.email || 'alex@demo.com',
+          views: 142
         });
       } else {
-        const data = await api.get(`/users/${targetId}`);
+        // Increment view if a recruiter is viewing a student's profile
+        const shouldIncrement = authRole === 'recruiter' && !isOwnProfile;
+        const data = await api.get(`/users/${targetId}${shouldIncrement ? '?incrementView=true' : ''}`);
         if (data) {
           setProfile({
             firstName: data.firstName || '',
@@ -95,7 +99,8 @@ const Profile = () => {
             github: data.github || '',
             linkedin: data.linkedin || '',
             website: data.website || '',
-            email: data.email || ''
+            email: data.email || '',
+            views: data.views || 0
           });
         }
       }
@@ -482,6 +487,18 @@ const Profile = () => {
                       <ExternalLink className="w-3 h-3 ml-auto text-indigo-500/60" />
                     </a>
                   )}
+                </CardContent>
+              </Card>
+
+              <Card className="border-none shadow-sm bg-card">
+                <CardHeader>
+                  <CardTitle className="text-lg text-foreground">Stats</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-muted-foreground">Profile Views</span>
+                    <span className="font-bold text-primary">{profile.views}</span>
+                  </div>
                 </CardContent>
               </Card>
             </div>

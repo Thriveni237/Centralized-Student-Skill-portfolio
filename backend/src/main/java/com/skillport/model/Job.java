@@ -25,4 +25,8 @@ public class Job {
     private LocalDateTime createdAt = LocalDateTime.now();
     
     private Long recruiterId;
+
+    // Tracking fields
+    private Integer views = 0;
+    private Integer applicants = 0;
 }

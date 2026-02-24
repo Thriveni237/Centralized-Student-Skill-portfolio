@@ -1,7 +1,9 @@
 package com.skillport.controller;
 
 import com.skillport.model.Application;
+import com.skillport.model.Job;
 import com.skillport.repository.ApplicationRepository;
+import com.skillport.repository.JobRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +16,9 @@ public class ApplicationController {
 
     @Autowired
     private ApplicationRepository applicationRepository;
+
+    @Autowired
+    private JobRepository jobRepository;
 
     @GetMapping("/health")
     public String health() {
@@ -32,7 +37,17 @@ public class ApplicationController {
 
     @PostMapping
     public Application applyForJob(@RequestBody Application application) {
-        return applicationRepository.save(application);
+        Application savedApp = applicationRepository.save(application);
+        
+        // Increment applicant count on the job
+        if (application.getJobId() != null) {
+            jobRepository.findById(application.getJobId()).ifPresent(job -> {
+                job.setApplicants((job.getApplicants() == null ? 0 : job.getApplicants()) + 1);
+                jobRepository.save(job);
+            });
+        }
+        
+        return savedApp;
     }
 
     @PutMapping("/{id}/status")

@@ -35,6 +35,9 @@ public class User {
     private boolean notifApplications = true;
     private boolean notifMarketing = false;
 
+    // Tracking
+    private Integer views = 0;
+
     @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Project> projects;
@@ -93,4 +96,7 @@ public class User {
 
     public boolean isNotifMarketing() { return notifMarketing; }
     public void setNotifMarketing(boolean notifMarketing) { this.notifMarketing = notifMarketing; }
+
+    public Integer getViews() { return views; }
+    public void setViews(Integer views) { this.views = views; }
 }

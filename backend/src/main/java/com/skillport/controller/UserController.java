@@ -82,9 +82,15 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getUserById(@PathVariable Long id) {
+    public ResponseEntity<?> getUserById(@PathVariable Long id, @RequestParam(required = false) boolean incrementView) {
         return userRepository.findById(id)
-            .map(ResponseEntity::ok)
+            .map(user -> {
+                if (incrementView) {
+                    user.setViews((user.getViews() == null ? 0 : user.getViews()) + 1);
+                    userRepository.save(user);
+                }
+                return ResponseEntity.ok(user);
+            })
             .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body((User) null));
     }
