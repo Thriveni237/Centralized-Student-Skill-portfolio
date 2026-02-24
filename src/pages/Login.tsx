@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { GraduationCap, Loader2, Play } from "lucide-react";
+import { GraduationCap, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -23,7 +23,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const { setDemoMode, login } = useAuth();
+  const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,12 +50,6 @@ const Login = () => {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const handleDemoLogin = (role: "student" | "recruiter" | "admin") => {
-    setDemoMode(role);
-    showSuccess(`Entering as Demo ${role}...`);
-    navigate(`/dashboard/${role}`);
   };
 
   return (
@@ -119,27 +113,6 @@ const Login = () => {
             </CardFooter>
           </form>
         </Card>
-
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t border-border" />
-          </div>
-          <div className="relative flex justify-center text-xs uppercase">
-            <span className="bg-background px-2 text-primary font-bold">Presentation Mode</span>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-3 gap-3">
-          <Button variant="outline" size="sm" onClick={() => handleDemoLogin('student')} className="text-[10px] h-auto py-3 flex-col gap-2 border-border hover:bg-accent">
-            <Play className="w-4 h-4 text-primary" /> Student
-          </Button>
-          <Button variant="outline" size="sm" onClick={() => handleDemoLogin('recruiter')} className="text-[10px] h-auto py-3 flex-col gap-2 border-border hover:bg-accent">
-            <Play className="w-4 h-4 text-primary" /> Recruiter
-          </Button>
-          <Button variant="outline" size="sm" onClick={() => handleDemoLogin('admin')} className="text-[10px] h-auto py-3 flex-col gap-2 border-border hover:bg-accent">
-            <Play className="w-4 h-4 text-primary" /> Admin
-          </Button>
-        </div>
       </div>
     </div>
   );
