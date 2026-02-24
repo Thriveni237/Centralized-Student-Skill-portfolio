@@ -54,16 +54,16 @@ const ManageRecruiters = () => {
       <div className="space-y-8">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900">Manage Recruiters</h1>
-            <p className="text-slate-500">Verify and monitor hiring partners on the platform.</p>
+            <h1 className="text-3xl font-bold text-foreground">Manage Recruiters</h1>
+            <p className="text-muted-foreground">Verify and monitor hiring partners on the platform.</p>
           </div>
-          <Button className="bg-blue-600 hover:bg-blue-700">Invite Partner</Button>
+          <Button className="bg-primary hover:bg-primary/90 text-primary-foreground">Invite Partner</Button>
         </div>
 
-        <Card className="border-none shadow-sm">
+        <Card className="border-none shadow-sm bg-card">
           <CardHeader className="pb-0">
             <div className="relative max-w-sm">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input 
                 placeholder="Search companies or contacts..." 
                 className="pl-10"
@@ -73,32 +73,32 @@ const ManageRecruiters = () => {
             </div>
           </CardHeader>
           <CardContent className="pt-6">
-            <div className="rounded-md border">
+            <div className="rounded-md border border-border">
               <Table>
                 <TableHeader>
-                  <TableRow className="bg-slate-50/50">
-                    <TableHead>Company</TableHead>
-                    <TableHead>Primary Contact</TableHead>
-                    <TableHead>Active Jobs</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
+                  <TableRow className="bg-muted/50">
+                    <TableHead className="text-foreground">Company</TableHead>
+                    <TableHead className="text-foreground">Primary Contact</TableHead>
+                    <TableHead className="text-foreground">Active Jobs</TableHead>
+                    <TableHead className="text-foreground">Status</TableHead>
+                    <TableHead className="text-right text-foreground">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {filteredRecruiters.map((recruiter) => (
-                    <TableRow key={recruiter.id}>
+                    <TableRow key={recruiter.id} className="border-border">
                       <TableCell>
                         <div className="flex items-center gap-3">
-                          <div className="w-8 h-8 bg-slate-100 rounded flex items-center justify-center">
-                            <Building2 className="w-4 h-4 text-slate-400" />
+                          <div className="w-8 h-8 bg-muted rounded flex items-center justify-center">
+                            <Building2 className="w-4 h-4 text-muted-foreground" />
                           </div>
-                          <span className="font-medium text-slate-900">{recruiter.name}</span>
+                          <span className="font-medium text-foreground">{recruiter.name}</span>
                         </div>
                       </TableCell>
                       <TableCell>
                         <div className="flex flex-col">
-                          <span className="text-sm font-medium">{recruiter.contact}</span>
-                          <span className="text-xs text-slate-500">{recruiter.email}</span>
+                          <span className="text-sm font-medium text-foreground">{recruiter.contact}</span>
+                          <span className="text-xs text-muted-foreground">{recruiter.email}</span>
                         </div>
                       </TableCell>
                       <TableCell>
@@ -108,10 +108,10 @@ const ManageRecruiters = () => {
                       </TableCell>
                       <TableCell>
                         <Badge 
-                          variant={recruiter.status === 'Verified' ? 'default' : 'secondary'} 
+                          variant="secondary" 
                           className={
-                            recruiter.status === 'Verified' ? 'bg-emerald-100 text-emerald-700 hover:bg-emerald-100' : 
-                            recruiter.status === 'Suspended' ? 'bg-red-100 text-red-700 hover:bg-red-100' : ''
+                            recruiter.status === 'Verified' ? 'bg-emerald-500/10 text-emerald-500' : 
+                            recruiter.status === 'Suspended' ? 'bg-destructive/10 text-destructive' : 'bg-muted text-muted-foreground'
                           }
                         >
                           {recruiter.status}
@@ -134,7 +134,7 @@ const ManageRecruiters = () => {
                             >
                               <CheckCircle2 className="w-4 h-4 text-emerald-500" /> Verify Partner
                             </DropdownMenuItem>
-                            <DropdownMenuItem className="gap-2 text-red-600">
+                            <DropdownMenuItem className="gap-2 text-destructive">
                               <XCircle className="w-4 h-4" /> Suspend Access
                             </DropdownMenuItem>
                           </DropdownMenuContent>

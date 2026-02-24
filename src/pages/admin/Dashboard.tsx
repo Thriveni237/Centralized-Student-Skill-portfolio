@@ -44,61 +44,66 @@ const AdminDashboard = () => {
     <DashboardLayout role="admin">
       <div className="space-y-8">
         <div>
-          <h1 className="text-3xl font-bold text-slate-900">Institution Overview</h1>
-          <p className="text-slate-500">Monitor student progress and recruiter engagement.</p>
+          <h1 className="text-3xl font-bold text-foreground">Institution Overview</h1>
+          <p className="text-muted-foreground">Monitor student progress and recruiter engagement.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {stats.map((stat) => (
-            <Card key={stat.label} className="border-none shadow-sm">
+            <Card key={stat.label} className="border-none shadow-sm bg-card">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-4">
-                  <div className="p-2 bg-blue-50 rounded-lg">
-                    <stat.icon className="w-5 h-5 text-blue-600" />
+                  <div className="p-2 bg-primary/10 rounded-lg">
+                    <stat.icon className="w-5 h-5 text-primary" />
                   </div>
-                  <div className={`flex items-center text-xs font-bold ${stat.up ? 'text-emerald-600' : 'text-red-600'}`}>
+                  <div className={`flex items-center text-xs font-bold ${stat.up ? 'text-emerald-500' : 'text-destructive'}`}>
                     {stat.trend}
                     {stat.up ? <ArrowUpRight className="w-3 h-3 ml-1" /> : <ArrowDownRight className="w-3 h-3 ml-1" />}
                   </div>
                 </div>
-                <p className="text-sm font-medium text-slate-500">{stat.label}</p>
-                <p className="text-2xl font-bold text-slate-900">{stat.value}</p>
+                <p className="text-sm font-medium text-muted-foreground">{stat.label}</p>
+                <p className="text-2xl font-bold text-foreground">{stat.value}</p>
               </CardContent>
             </Card>
           ))}
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8">
-          <Card className="border-none shadow-sm">
+          <Card className="border-none shadow-sm bg-card">
             <CardHeader>
-              <CardTitle>Student Growth & Placements</CardTitle>
+              <CardTitle className="text-foreground">Student Growth & Placements</CardTitle>
             </CardHeader>
             <CardContent className="h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={data}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                  <XAxis dataKey="name" axisLine={false} tickLine={false} />
-                  <YAxis axisLine={false} tickLine={false} />
-                  <Tooltip />
-                  <Bar dataKey="students" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="currentColor" opacity={0.1} />
+                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: 'currentColor', opacity: 0.5}} />
+                  <YAxis axisLine={false} tickLine={false} tick={{fill: 'currentColor', opacity: 0.5}} />
+                  <Tooltip 
+                    contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', color: 'hsl(var(--foreground))' }}
+                    itemStyle={{ color: 'hsl(var(--primary))' }}
+                  />
+                  <Bar dataKey="students" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
                   <Bar dataKey="placements" fill="#10b981" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </CardContent>
           </Card>
 
-          <Card className="border-none shadow-sm">
+          <Card className="border-none shadow-sm bg-card">
             <CardHeader>
-              <CardTitle>Recruiter Engagement</CardTitle>
+              <CardTitle className="text-foreground">Recruiter Engagement</CardTitle>
             </CardHeader>
             <CardContent className="h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={data}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                  <XAxis dataKey="name" axisLine={false} tickLine={false} />
-                  <YAxis axisLine={false} tickLine={false} />
-                  <Tooltip />
-                  <Line type="monotone" dataKey="students" stroke="#3b82f6" strokeWidth={2} dot={false} />
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="currentColor" opacity={0.1} />
+                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: 'currentColor', opacity: 0.5}} />
+                  <YAxis axisLine={false} tickLine={false} tick={{fill: 'currentColor', opacity: 0.5}} />
+                  <Tooltip 
+                    contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', color: 'hsl(var(--foreground))' }}
+                  />
+                  <Line type="monotone" dataKey="students" stroke="hsl(var(--primary))" strokeWidth={2} dot={false} />
                 </LineChart>
               </ResponsiveContainer>
             </CardContent>

@@ -44,7 +44,6 @@ const ManageStudents = () => {
   const fetchStudents = async () => {
     setLoading(true);
     try {
-      // Fetch all users and filter on frontend to be safe
       const data = await api.get('/users');
       const studentList = Array.isArray(data) ? data.filter((u: any) => u.role === 'student') : [];
       setStudents(studentList);
@@ -69,8 +68,8 @@ const ManageStudents = () => {
       <div className="space-y-8">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900">Manage Students</h1>
-            <p className="text-slate-500">View and manage student accounts from your local database.</p>
+            <h1 className="text-3xl font-bold text-foreground">Manage Students</h1>
+            <p className="text-muted-foreground">View and manage student accounts from your database.</p>
           </div>
           <div className="flex gap-2">
             <Button variant="outline" onClick={fetchStudents} className="gap-2">
@@ -82,10 +81,10 @@ const ManageStudents = () => {
           </div>
         </div>
 
-        <Card className="border-none shadow-sm">
+        <Card className="border-none shadow-sm bg-card">
           <CardHeader className="pb-0">
             <div className="relative max-w-sm">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input 
                 placeholder="Search students..." 
                 className="pl-10"
@@ -97,30 +96,30 @@ const ManageStudents = () => {
           <CardContent className="pt-6">
             {loading ? (
               <div className="flex justify-center py-12">
-                <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+                <Loader2 className="w-8 h-8 animate-spin text-primary" />
               </div>
             ) : (
-              <div className="rounded-md border">
+              <div className="rounded-md border border-border">
                 <Table>
                   <TableHeader>
-                    <TableRow className="bg-slate-50/50">
-                      <TableHead>Student Name</TableHead>
-                      <TableHead>Email</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead className="text-right">Actions</TableHead>
+                    <TableRow className="bg-muted/50">
+                      <TableHead className="text-foreground">Student Name</TableHead>
+                      <TableHead className="text-foreground">Email</TableHead>
+                      <TableHead className="text-foreground">Status</TableHead>
+                      <TableHead className="text-right text-foreground">Actions</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {filteredStudents.map((student) => (
-                      <TableRow key={student.id}>
+                      <TableRow key={student.id} className="border-border">
                         <TableCell>
                           <div className="flex flex-col">
-                            <span className="font-medium text-slate-900">{student.firstName} {student.lastName}</span>
+                            <span className="font-medium text-foreground">{student.firstName} {student.lastName}</span>
                           </div>
                         </TableCell>
-                        <TableCell>{student.email}</TableCell>
+                        <TableCell className="text-muted-foreground">{student.email}</TableCell>
                         <TableCell>
-                          <Badge variant="default" className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100">
+                          <Badge variant="secondary" className="bg-emerald-500/10 text-emerald-500 border-none">
                             Active
                           </Badge>
                         </TableCell>
@@ -136,10 +135,10 @@ const ManageStudents = () => {
                                 <Mail className="w-4 h-4" /> Email Student
                               </DropdownMenuItem>
                               <DropdownMenuItem 
-                                className="gap-2"
+                                className="gap-2 text-destructive"
                                 onClick={() => handleStatusToggle(student.firstName)}
                               >
-                                <UserX className="w-4 h-4 text-red-500" /> Deactivate
+                                <UserX className="w-4 h-4" /> Deactivate
                               </DropdownMenuItem>
                             </DropdownMenuContent>
                           </DropdownMenu>
@@ -148,8 +147,8 @@ const ManageStudents = () => {
                     ))}
                     {filteredStudents.length === 0 && (
                       <TableRow>
-                        <TableCell colSpan={4} className="text-center py-8 text-slate-500">
-                          No students found in the database. Try registering a new student account.
+                        <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
+                          No students found in the database.
                         </TableCell>
                       </TableRow>
                     )}

@@ -42,27 +42,27 @@ const Reports = () => {
       <div className="space-y-8">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900">Placement Reports</h1>
-            <p className="text-slate-500">Detailed analytics on student success and recruiter engagement.</p>
+            <h1 className="text-3xl font-bold text-foreground">Placement Reports</h1>
+            <p className="text-muted-foreground">Detailed analytics on student success and recruiter engagement.</p>
           </div>
           <div className="flex gap-2">
             <Button variant="outline" className="gap-2">
               <Filter className="w-4 h-4" /> Filter
             </Button>
-            <Button className="bg-blue-600 hover:bg-blue-700 gap-2">
+            <Button className="bg-primary hover:bg-primary/90 text-primary-foreground gap-2">
               <Download className="w-4 h-4" /> Export PDF
             </Button>
           </div>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Card className="border-none shadow-sm bg-blue-600 text-white">
+          <Card className="border-none shadow-sm bg-primary text-primary-foreground">
             <CardContent className="p-6 flex items-center gap-4">
               <div className="p-3 bg-white/20 rounded-xl">
                 <TrendingUp className="w-6 h-6" />
               </div>
               <div>
-                <p className="text-blue-100 text-sm">Avg. Salary Package</p>
+                <p className="opacity-80 text-sm">Avg. Salary Package</p>
                 <p className="text-2xl font-bold">$85,000</p>
               </div>
             </CardContent>
@@ -73,7 +73,7 @@ const Reports = () => {
                 <Briefcase className="w-6 h-6" />
               </div>
               <div>
-                <p className="text-emerald-100 text-sm">Placement Rate</p>
+                <p className="opacity-80 text-sm">Placement Rate</p>
                 <p className="text-2xl font-bold">82.4%</p>
               </div>
             </CardContent>
@@ -84,7 +84,7 @@ const Reports = () => {
                 <Award className="w-6 h-6" />
               </div>
               <div>
-                <p className="text-indigo-100 text-sm">Top Recruiter</p>
+                <p className="opacity-80 text-sm">Top Recruiter</p>
                 <p className="text-2xl font-bold">Google</p>
               </div>
             </CardContent>
@@ -92,26 +92,28 @@ const Reports = () => {
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8">
-          <Card className="border-none shadow-sm">
+          <Card className="border-none shadow-sm bg-card">
             <CardHeader>
-              <CardTitle>Placement Trends (Yearly)</CardTitle>
+              <CardTitle className="text-foreground">Placement Trends (Yearly)</CardTitle>
             </CardHeader>
             <CardContent className="h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={placementData}>
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                  <XAxis dataKey="name" axisLine={false} tickLine={false} />
-                  <YAxis axisLine={false} tickLine={false} unit="%" />
-                  <Tooltip />
-                  <Line type="monotone" dataKey="rate" stroke="#3b82f6" strokeWidth={3} dot={{ r: 6, fill: '#3b82f6' }} />
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="currentColor" opacity={0.1} />
+                  <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{fill: 'currentColor', opacity: 0.5}} />
+                  <YAxis axisLine={false} tickLine={false} tick={{fill: 'currentColor', opacity: 0.5}} unit="%" />
+                  <Tooltip 
+                    contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', color: 'hsl(var(--foreground))' }}
+                  />
+                  <Line type="monotone" dataKey="rate" stroke="hsl(var(--primary))" strokeWidth={3} dot={{ r: 6, fill: 'hsl(var(--primary))' }} />
                 </LineChart>
               </ResponsiveContainer>
             </CardContent>
           </Card>
 
-          <Card className="border-none shadow-sm">
+          <Card className="border-none shadow-sm bg-card">
             <CardHeader>
-              <CardTitle>Top Skills Distribution</CardTitle>
+              <CardTitle className="text-foreground">Top Skills Distribution</CardTitle>
             </CardHeader>
             <CardContent className="h-[300px] flex items-center justify-center">
               <ResponsiveContainer width="100%" height="100%">
@@ -129,14 +131,16 @@ const Reports = () => {
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
-                  <Tooltip />
+                  <Tooltip 
+                    contentStyle={{ backgroundColor: 'hsl(var(--card))', borderColor: 'hsl(var(--border))', color: 'hsl(var(--foreground))' }}
+                  />
                 </PieChart>
               </ResponsiveContainer>
               <div className="space-y-2">
                 {skillData.map((item, i) => (
                   <div key={item.name} className="flex items-center gap-2 text-sm">
                     <div className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[i] }} />
-                    <span className="text-slate-600">{item.name}</span>
+                    <span className="text-muted-foreground">{item.name}</span>
                   </div>
                 ))}
               </div>
