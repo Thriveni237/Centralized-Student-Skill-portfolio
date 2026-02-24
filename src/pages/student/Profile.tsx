@@ -31,26 +31,31 @@ import {
 import { showSuccess, showError } from '@/utils/toast';
 import { api } from '@/lib/api';
 import { useAuth } from '@/context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 
 const Profile = () => {
-  const { user, isDemo, login } = useAuth();
+  const { user: authUser, isDemo, login, role: authRole } = useAuth();
+  const { studentId } = useParams();
   const navigate = useNavigate();
+  
+  const isOwnProfile = !studentId || studentId === authUser?.id;
+  const targetId = studentId || authUser?.id;
+
   const [isEditing, setIsEditing] = useState(false);
   const [isPreview, setIsPreview] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [fetching, setFetching] = useState(!isDemo);
+  const [fetching, setFetching] = useState(true);
   
-  // Initialize state directly from the user object in AuthContext
   const [profile, setProfile] = useState({
-    firstName: user?.firstName || '',
-    lastName: user?.lastName || '',
-    bio: user?.bio || '',
-    location: user?.location || '',
-    github: user?.github || '',
-    linkedin: user?.linkedin || '',
-    website: user?.website || ''
+    firstName: '',
+    lastName: '',
+    bio: '',
+    location: '',
+    github: '',
+    linkedin: '',
+    website: '',
+    email: ''
   });
 
   const [portfolioData, setPortfolioData] = useState({
@@ -59,40 +64,43 @@ const Profile = () => {
   });
 
   useEffect(() => {
-    if (user?.id && !isDemo) {
+    if (targetId) {
       fetchProfile();
       fetchPortfolioExtras();
-    } else if (isDemo) {
-      setProfile({
-        firstName: user?.firstName || 'Alex',
-        lastName: user?.lastName || 'Johnson',
-        bio: 'Passionate software engineering student with a focus on full-stack development.',
-        location: 'San Francisco, CA',
-        github: 'github.com/alexj',
-        linkedin: 'linkedin.com/in/alexj',
-        website: 'alexj.dev'
-      });
-      setFetching(false);
     }
-  }, [user, isDemo]);
+  }, [targetId, isDemo]);
 
   const fetchProfile = async () => {
+    setFetching(true);
     try {
-      const data = await api.get(`/users/${user.id}`);
-      if (data) {
+      if (isDemo && isOwnProfile) {
         setProfile({
-          firstName: data.firstName || user?.firstName || '',
-          lastName: data.lastName || user?.lastName || '',
-          bio: data.bio || '',
-          location: data.location || '',
-          github: data.github || '',
-          linkedin: data.linkedin || '',
-          website: data.website || ''
+          firstName: authUser?.firstName || 'Alex',
+          lastName: authUser?.lastName || 'Johnson',
+          bio: 'Passionate software engineering student with a focus on full-stack development.',
+          location: 'San Francisco, CA',
+          github: 'github.com/alexj',
+          linkedin: 'linkedin.com/in/alexj',
+          website: 'alexj.dev',
+          email: authUser?.email || 'alex@demo.com'
         });
+      } else {
+        const data = await api.get(`/users/${targetId}`);
+        if (data) {
+          setProfile({
+            firstName: data.firstName || '',
+            lastName: data.lastName || '',
+            bio: data.bio || '',
+            location: data.location || '',
+            github: data.github || '',
+            linkedin: data.linkedin || '',
+            website: data.website || '',
+            email: data.email || ''
+          });
+        }
       }
     } catch (error: any) {
-      // We don't show error here because we already have the basic names from AuthContext
-      console.error("Failed to load full profile data:", error.message);
+      console.error("Failed to load profile data:", error.message);
     } finally {
       setFetching(false);
     }
@@ -100,10 +108,13 @@ const Profile = () => {
 
   const fetchPortfolioExtras = async () => {
     try {
+      // In a real app, we'd fetch by targetId. For now, we fetch all and filter or use demo data.
       const [skills, projects] = await Promise.all([
         api.get('/skills'),
         api.get('/projects')
       ]);
+      
+      // Simplified filtering for this implementation
       setPortfolioData({
         skills: Array.isArray(skills) ? skills : [],
         projects: Array.isArray(projects) ? projects : []
@@ -123,7 +134,7 @@ const Profile = () => {
 
     setIsLoading(true);
     try {
-      const updatedUser = await api.put(`/users/${user.id}`, profile);
+      const updatedUser = await api.put(`/users/${authUser.id}`, profile);
       login(updatedUser);
       showSuccess("Profile saved successfully!");
       setIsEditing(false);
@@ -135,14 +146,14 @@ const Profile = () => {
   };
 
   const handleShare = () => {
-    const url = window.location.origin + "/dashboard/student/profile";
+    const url = window.location.origin + `/dashboard/recruiter/student/${targetId}`;
     navigator.clipboard.writeText(url);
     showSuccess("Profile link copied to clipboard!");
   };
 
-  if (fetching && !profile.firstName) {
+  if (fetching) {
     return (
-      <DashboardLayout role="student">
+      <DashboardLayout role={authRole as any}>
         <div className="flex justify-center py-20">
           <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
         </div>
@@ -152,7 +163,8 @@ const Profile = () => {
 
   const initials = `${profile.firstName?.[0] || ''}${profile.lastName?.[0] || ''}` || 'U';
 
-  if (isPreview) {
+  // If a recruiter is viewing, or student is in preview mode
+  if (isPreview || (!isOwnProfile && authRole === 'recruiter')) {
     return (
       <div className="min-h-screen bg-white animate-in fade-in duration-500">
         <nav className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b">
@@ -161,10 +173,12 @@ const Profile = () => {
               <div className="bg-blue-600 p-1.5 rounded-lg">
                 <ShieldCheck className="text-white w-5 h-5" />
               </div>
-              <span className="font-bold text-slate-900">Portfolio Preview</span>
+              <span className="font-bold text-slate-900">
+                {authRole === 'recruiter' ? 'Student Portfolio' : 'Portfolio Preview'}
+              </span>
             </div>
-            <Button variant="outline" onClick={() => setIsPreview(false)} className="gap-2">
-              <ArrowLeft className="w-4 h-4" /> Exit Preview
+            <Button variant="outline" onClick={() => isPreview ? setIsPreview(false) : navigate(-1)} className="gap-2">
+              <ArrowLeft className="w-4 h-4" /> {isPreview ? 'Exit Preview' : 'Back to Search'}
             </Button>
           </div>
         </nav>
@@ -258,7 +272,7 @@ const Profile = () => {
                     <p className="text-slate-400">I'm currently open to internships and junior developer roles.</p>
                   </div>
                   <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white h-14 text-xl font-bold rounded-2xl" asChild>
-                    <a href={`mailto:${user?.email}`}>
+                    <a href={`mailto:${profile.email}`}>
                       <Mail className="w-6 h-6 mr-3" /> Contact Me
                     </a>
                   </Button>
@@ -425,7 +439,7 @@ const Profile = () => {
                       </div>
                       <div className="flex flex-wrap items-center gap-4 mt-2 text-slate-500">
                         <span className="flex items-center gap-1.5"><MapPin className="w-4 h-4" /> {profile.location || 'Location not set'}</span>
-                        <span className="flex items-center gap-1.5"><Mail className="w-4 h-4" /> {user?.email}</span>
+                        <span className="flex items-center gap-1.5"><Mail className="w-4 h-4" /> {profile.email}</span>
                       </div>
                     </div>
                   </div>

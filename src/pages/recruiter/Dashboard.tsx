@@ -7,10 +7,11 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Search, Filter, MapPin, Bookmark, BookmarkCheck, Loader2, Mail } from 'lucide-react';
+import { Search, Filter, MapPin, Bookmark, BookmarkCheck, Loader2, Mail, User } from 'lucide-react';
 import { api } from '@/lib/api';
 import { showError, showSuccess } from '@/utils/toast';
 import { useAuth } from '@/context/AuthContext';
+import { Link } from 'react-router-dom';
 
 const RecruiterDashboard = () => {
   const { isDemo } = useAuth();
@@ -26,6 +27,7 @@ const RecruiterDashboard = () => {
       lastName: 'Johnson',
       bio: 'Full Stack Developer specializing in React and Spring Boot.',
       location: 'San Francisco, CA',
+      email: 'alex@demo.com',
       avatarUrl: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=100'
     },
     {
@@ -34,6 +36,7 @@ const RecruiterDashboard = () => {
       lastName: 'Chen',
       bio: 'UI/UX Designer with a passion for accessible web design.',
       location: 'New York, NY',
+      email: 'sarah@demo.com',
       avatarUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100'
     }
   ];
@@ -86,6 +89,10 @@ const RecruiterDashboard = () => {
     localStorage.setItem('saved_candidate_ids', JSON.stringify(newSavedIds));
   };
 
+  const handleContact = (email: string) => {
+    window.location.href = `mailto:${email}?subject=Opportunity from SkillPort`;
+  };
+
   return (
     <DashboardLayout role="recruiter">
       <div className="space-y-8">
@@ -120,10 +127,10 @@ const RecruiterDashboard = () => {
           <div className="grid gap-6">
             {filteredStudents.length > 0 ? (
               filteredStudents.map((student) => (
-                <Card key={student.id} className="border-none shadow-sm hover:shadow-md transition-shadow">
+                <Card key={student.id} className="border-none shadow-sm hover:shadow-md transition-shadow group">
                   <CardContent className="p-6">
                     <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
-                      <Avatar className="w-16 h-16 border">
+                      <Avatar className="w-16 h-16 border group-hover:border-blue-200 transition-colors">
                         <AvatarImage src={student.avatarUrl} />
                         <AvatarFallback className="bg-blue-100 text-blue-600">
                           {student.firstName?.[0]}{student.lastName?.[0]}
@@ -132,9 +139,12 @@ const RecruiterDashboard = () => {
                       
                       <div className="flex-1 space-y-2">
                         <div className="flex items-center justify-between">
-                          <h3 className="text-xl font-bold text-slate-900">
-                            {student.firstName} {student.lastName}
-                          </h3>
+                          <div>
+                            <h3 className="text-xl font-bold text-slate-900 group-hover:text-blue-600 transition-colors">
+                              {student.firstName} {student.lastName}
+                            </h3>
+                            <p className="text-blue-600 font-medium text-sm">Student</p>
+                          </div>
                           <div className="flex items-center gap-2">
                             <Button 
                               variant="ghost" 
@@ -144,13 +154,21 @@ const RecruiterDashboard = () => {
                             >
                               {savedIds.includes(student.id) ? <BookmarkCheck className="w-5 h-5" /> : <Bookmark className="w-5 h-5" />}
                             </Button>
-                            <Button variant="outline" size="sm">
+                            <Link to={`/dashboard/recruiter/student/${student.id}`}>
+                              <Button variant="outline" size="sm" className="gap-2">
+                                <User className="w-4 h-4" /> View Profile
+                              </Button>
+                            </Link>
+                            <Button 
+                              variant="default" 
+                              size="sm" 
+                              className="bg-blue-600 hover:bg-blue-700"
+                              onClick={() => handleContact(student.email)}
+                            >
                               <Mail className="w-4 h-4 mr-2" /> Contact
                             </Button>
                           </div>
                         </div>
-                        
-                        <p className="text-blue-600 font-medium">Student</p>
                         
                         <div className="flex flex-wrap items-center gap-4 text-sm text-slate-500">
                           <span className="flex items-center gap-1"><MapPin className="w-4 h-4" /> {student.location || 'Remote'}</span>
