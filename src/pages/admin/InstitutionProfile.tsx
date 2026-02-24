@@ -13,13 +13,13 @@ import { showSuccess } from '@/utils/toast';
 const InstitutionProfile = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [profile, setProfile] = useState({
-    name: 'Tech University of Excellence',
-    address: '123 Education Lane, Silicon Valley, CA',
-    website: 'https://tech-uni.edu',
-    email: 'admin@tech-uni.edu',
-    phone: '+1 (555) 012-3456',
-    description: 'A premier institution dedicated to fostering innovation and technical excellence in the next generation of engineers and designers.',
-    departments: ['Computer Science', 'Information Technology', 'Data Science', 'UI/UX Design']
+    name: '',
+    address: '',
+    website: '',
+    email: '',
+    phone: '',
+    description: '',
+    departments: [] as string[]
   });
 
   const handleSave = (e: React.FormEvent) => {
@@ -29,6 +29,23 @@ const InstitutionProfile = () => {
       setIsLoading(false);
       showSuccess("Institution profile updated!");
     }, 1000);
+  };
+
+  const removeDepartment = (deptToRemove: string) => {
+    setProfile(prev => ({
+      ...prev,
+      departments: prev.departments.filter(d => d !== deptToRemove)
+    }));
+  };
+
+  const addDepartment = () => {
+    const dept = prompt("Enter department name:");
+    if (dept && !profile.departments.includes(dept)) {
+      setProfile(prev => ({
+        ...prev,
+        departments: [...prev.departments, dept]
+      }));
+    }
   };
 
   return (
@@ -50,6 +67,7 @@ const InstitutionProfile = () => {
                   <Label htmlFor="name" className="text-foreground">Institution Name</Label>
                   <Input 
                     id="name" 
+                    placeholder="Enter institution name"
                     value={profile.name}
                     onChange={e => setProfile({...profile, name: e.target.value})}
                   />
@@ -61,6 +79,7 @@ const InstitutionProfile = () => {
                     <Input 
                       id="address" 
                       className="pl-10"
+                      placeholder="Enter physical address"
                       value={profile.address}
                       onChange={e => setProfile({...profile, address: e.target.value})}
                     />
@@ -74,6 +93,7 @@ const InstitutionProfile = () => {
                       <Input 
                         id="website" 
                         className="pl-10"
+                        placeholder="https://example.edu"
                         value={profile.website}
                         onChange={e => setProfile({...profile, website: e.target.value})}
                       />
@@ -86,6 +106,7 @@ const InstitutionProfile = () => {
                       <Input 
                         id="email" 
                         className="pl-10"
+                        placeholder="admin@example.edu"
                         value={profile.email}
                         onChange={e => setProfile({...profile, email: e.target.value})}
                       />
@@ -97,6 +118,7 @@ const InstitutionProfile = () => {
                   <Textarea 
                     id="description" 
                     rows={4}
+                    placeholder="Describe your institution..."
                     value={profile.description}
                     onChange={e => setProfile({...profile, description: e.target.value})}
                   />
@@ -113,13 +135,28 @@ const InstitutionProfile = () => {
                   {profile.departments.map(dept => (
                     <div key={dept} className="flex items-center gap-2 px-3 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-medium">
                       {dept}
-                      <button type="button" className="hover:text-primary/80"><Trash2 className="w-3 h-3" /></button>
+                      <button 
+                        type="button" 
+                        onClick={() => removeDepartment(dept)}
+                        className="hover:text-destructive transition-colors"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </button>
                     </div>
                   ))}
-                  <Button variant="outline" size="sm" className="rounded-full border-dashed">
+                  <Button 
+                    type="button"
+                    variant="outline" 
+                    size="sm" 
+                    className="rounded-full border-dashed"
+                    onClick={addDepartment}
+                  >
                     <Plus className="w-3 h-3 mr-1" /> Add Department
                   </Button>
                 </div>
+                {profile.departments.length === 0 && (
+                  <p className="text-sm text-muted-foreground italic">No departments added yet.</p>
+                )}
               </CardContent>
             </Card>
 
@@ -140,7 +177,7 @@ const InstitutionProfile = () => {
                   <div className="w-32 h-32 rounded-2xl border-2 border-dashed border-border flex items-center justify-center bg-muted overflow-hidden">
                     <Building2 className="w-12 h-12 text-muted-foreground" />
                   </div>
-                  <button className="absolute -bottom-2 -right-2 p-2 bg-primary text-primary-foreground rounded-full shadow-lg hover:bg-primary/90 transition-colors">
+                  <button type="button" className="absolute -bottom-2 -right-2 p-2 bg-primary text-primary-foreground rounded-full shadow-lg hover:bg-primary/90 transition-colors">
                     <Camera className="w-4 h-4" />
                   </button>
                 </div>
@@ -156,15 +193,15 @@ const InstitutionProfile = () => {
                 <div className="space-y-4 mt-4">
                   <div className="flex justify-between text-sm">
                     <span className="opacity-80">Total Students</span>
-                    <span className="font-bold">2,543</span>
+                    <span className="font-bold">0</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="opacity-80">Active Recruiters</span>
-                    <span className="font-bold">48</span>
+                    <span className="font-bold">0</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="opacity-80">Placement Rate</span>
-                    <span className="font-bold text-emerald-300">82%</span>
+                    <span className="font-bold text-emerald-300">0%</span>
                   </div>
                 </div>
               </CardContent>
