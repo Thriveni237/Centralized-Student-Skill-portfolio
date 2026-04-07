@@ -110,7 +110,7 @@ const DatabaseExplorer = () => {
         <Card className="border-none shadow-sm overflow-hidden bg-card">
           <CardHeader className="bg-slate-950 text-white p-4">
             <div className="flex items-center gap-2 text-sm font-mono">
-              <span className="text-emerald-400">mysql></span>
+              <span className="text-emerald-400">mysql{'>'}</span>
               <span>SELECT * FROM {activeTable} WHERE data LIKE '%{searchQuery}%';</span>
             </div>
           </CardHeader>
